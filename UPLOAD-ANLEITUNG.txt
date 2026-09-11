@@ -1,10 +1,12 @@
-Bayer PLT Tools - Pt-Rechner Erweiterung
+Messstellen-Dokumentation V1
 
-In GitHub aktualisieren:
-1. index.html im Mainordner durch die neue index.html ersetzen.
-2. Im Mainordner einen neuen Pfad pt-rechner/index.html erstellen und den Inhalt der neuen Datei einfügen.
+GitHub aktualisieren:
+1. index.html im Mainordner ersetzen.
+2. Neuen Pfad messstellen-doku/index.html anlegen und die mitgelieferte Datei einfügen.
 3. service-worker.js im Mainordner ersetzen.
 4. Commit changes ausführen.
-5. Am PC Strg+F5 drücken. Auf dem iPhone die Seite schließen und neu öffnen.
+5. PC: Strg+F5. iPhone: Seite vollständig schließen und neu öffnen.
 
-Die vorhandenen Ordner assets, analogsignal und pf-rechner bleiben unverändert.
+Vorhandene Ordner und Dateien bleiben bestehen.
+Die Messstellenbezeichnung wird als PDF-Dateiname verwendet.
+Pflichtfelder: Messstellenbezeichnung, Datum, Typenschildfoto, Foto der Einbausituation.
