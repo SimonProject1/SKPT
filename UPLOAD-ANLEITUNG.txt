@@ -1,0 +1,10 @@
+Bayer PLT Tools - Pt-Rechner Erweiterung
+
+In GitHub aktualisieren:
+1. index.html im Mainordner durch die neue index.html ersetzen.
+2. Im Mainordner einen neuen Pfad pt-rechner/index.html erstellen und den Inhalt der neuen Datei einfügen.
+3. service-worker.js im Mainordner ersetzen.
+4. Commit changes ausführen.
+5. Am PC Strg+F5 drücken. Auf dem iPhone die Seite schließen und neu öffnen.
+
+Die vorhandenen Ordner assets, analogsignal und pf-rechner bleiben unverändert.
