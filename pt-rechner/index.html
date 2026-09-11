@@ -1,1 +1,68 @@
-
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071828"><link rel="icon" href="../assets/icon-192.png"><link rel="stylesheet" href="../assets/styles.css">
+<title>Pt-Rechner · Bayer PLT Tools</title>
+<style>
+.sensor-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px;margin-bottom:20px;border:1px solid var(--line);border-radius:18px;background:#061827}.sensor-tabs button{border:0;border-radius:13px;padding:15px;color:var(--muted);background:transparent;font:inherit;font-weight:850;cursor:pointer}.sensor-tabs button.active{color:#06141d;background:linear-gradient(135deg,var(--green),var(--cyan));box-shadow:0 8px 22px rgba(0,184,232,.18)}.pt-grid{display:grid;grid-template-columns:1fr .9fr;gap:18px}.input-wrap{position:relative}.input-wrap input{font-size:34px;font-weight:850;padding-right:65px;border-color:var(--cyan)}.input-wrap b{position:absolute;right:18px;bottom:15px;color:var(--cyan);font-size:18px}.temperature-card{position:relative;overflow:hidden}.temperature-card:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-75px;bottom:-105px;background:var(--green);filter:blur(65px);opacity:.16}.temperature{font-size:clamp(52px,10vw,78px);line-height:1;color:var(--green);margin:12px 0 10px;letter-spacing:-.045em}.temperature small{font-size:.38em}.thermo{height:14px;border:1px solid var(--line);border-radius:999px;background:#071827;overflow:hidden;margin-top:20px}.thermo i{display:block;height:100%;width:24%;border-radius:inherit;background:linear-gradient(90deg,#38bdf8,var(--green),#ffb020,#ff6470);transition:.25s}.range{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.fact{padding:15px;border:1px solid var(--line);border-radius:15px;background:#071a2a}.fact span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase}.fact strong{font-size:20px}.quick-values{display:flex;gap:8px;flex-wrap:wrap}.quick-values button{border:1px solid var(--line);border-radius:999px;padding:9px 13px;background:#092034;color:var(--muted);font:inherit;font-weight:750;cursor:pointer}.quick-values button:hover{border-color:var(--cyan);color:var(--text)}.note{padding:14px;border-left:3px solid var(--cyan);border-radius:10px;background:#071a2a;color:var(--muted);font-size:13px}.error{color:var(--danger);min-height:22px;margin:10px 0 0}.formula-box{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;color:var(--muted)}@media(max-width:760px){.pt-grid{grid-template-columns:1fr}.temperature{font-size:55px}.facts{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body><div class="shell">
+<header class="topbar"><img src="../assets/bayer-logo.webp" alt="Bayer Logo"><div class="brand">Bayer PLT Tools<small>PT-RECHNER</small></div><nav><a class="back" href="../">← Startseite</a></nav></header>
+<main>
+<section class="page-title"><div class="eyebrow">Widerstandsthermometer</div><h1>Pt100 / Pt1000</h1><p>Gemessenen Widerstand in Temperatur umrechnen.</p></section>
+<div class="sensor-tabs" role="group" aria-label="Sensortyp"><button class="active" data-sensor="100">Pt100</button><button data-sensor="1000">Pt1000</button></div>
+<div class="pt-grid">
+<section class="panel"><div class="eyebrow">Messwert</div><div class="divider"></div><label><span>Widerstand eingeben</span><div class="input-wrap"><input id="resistance" type="number" inputmode="decimal" step="any" value="138.51" aria-label="Widerstand in Ohm"><b>Ω</b></div></label><p class="error" id="error" role="status"></p><div class="divider"></div><div class="section-label">Schnellwerte</div><div class="quick-values"><button data-temp="-50">−50 °C</button><button data-temp="0">0 °C</button><button data-temp="25">25 °C</button><button data-temp="100">100 °C</button><button data-temp="150">150 °C</button></div></section>
+<section class="panel temperature-card"><div class="eyebrow">Temperatur</div><div class="temperature"><span id="temperature">100,00</span> <small>°C</small></div><p class="info" id="summary">138,510 Ω entsprechen 100,00 °C.</p><div class="thermo"><i id="thermoBar"></i></div><div class="range"><span>−200 °C</span><span>+850 °C</span></div><div class="facts"><div class="fact"><span>Sensortyp</span><strong id="sensorName">Pt100</strong></div><div class="fact"><span>R₀ bei 0 °C</span><strong id="rZero">100 Ω</strong></div></div></section>
+</div>
+<section class="panel"><div class="eyebrow">Berechnungsgrundlage</div><p class="formula-box" id="formulaText"></p><div class="divider"></div><p class="note">Berechnung nach der standardisierten Callendar-van-Dusen-Kennlinie. Leitungswiderstände, Eigenerwärmung und Sensortoleranzen werden nicht kompensiert.</p></section>
+</main><footer class="footer">Bayer PLT Tools · Pt-Rechner</footer></div>
+<script>
+const A=3.9083e-3,B=-5.775e-7,C=-4.183e-12;
+const $=id=>document.getElementById(id);
+let r0=100;
+const format=(n,d)=>new Intl.NumberFormat('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
+function resistanceAt(t){return r0*(1+A*t+B*t*t+(t<0?C*(t-100)*t*t*t:0));}
+function temperatureFromResistance(r){
+  if(r>=r0){
+    const disc=A*A-4*B*(1-r/r0);
+    if(disc<0)return NaN;
+    return (-A+Math.sqrt(disc))/(2*B);
+  }
+  let lo=-200,hi=0;
+  for(let i=0;i<80;i++){
+    const mid=(lo+hi)/2;
+    if(resistanceAt(mid)<r)lo=mid;else hi=mid;
+  }
+  return (lo+hi)/2;
+}
+function update(){
+  const r=parseFloat($('resistance').value);
+  const minR=resistanceAt(-200),maxR=resistanceAt(850);
+  $('error').textContent='';
+  if(!Number.isFinite(r)||r<=0){showError('Bitte einen gültigen Widerstand größer 0 Ω eingeben.');return;}
+  if(r<minR||r>maxR){showError(`Wert außerhalb der Kennlinie: ${format(minR,3)} bis ${format(maxR,3)} Ω.`);return;}
+  const t=temperatureFromResistance(r);
+  if(!Number.isFinite(t)){showError('Temperatur konnte nicht berechnet werden.');return;}
+  $('temperature').textContent=format(t,2);
+  $('summary').textContent=`${format(r,3)} Ω entsprechen ${format(t,2)} °C.`;
+  $('thermoBar').style.width=Math.max(0,Math.min(100,(t+200)/1050*100))+'%';
+  $('formulaText').textContent=t>=0?'R(t) = R₀ × (1 + A·t + B·t²)':'R(t) = R₀ × (1 + A·t + B·t² + C·(t−100)·t³)';
+}
+function showError(message){$('error').textContent=message;$('temperature').textContent='–';$('summary').textContent='Keine gültige Berechnung möglich.';$('thermoBar').style.width='0%';}
+function setSensor(value){
+  const previous=r0;
+  r0=Number(value);
+  document.querySelectorAll('[data-sensor]').forEach(b=>b.classList.toggle('active',Number(b.dataset.sensor)===r0));
+  $('sensorName').textContent='Pt'+r0;$('rZero').textContent=r0+' Ω';
+  const current=parseFloat($('resistance').value);
+  if(Number.isFinite(current))$('resistance').value=(current*r0/previous).toFixed(r0===100?2:1);
+  update();
+}
+document.querySelectorAll('[data-sensor]').forEach(b=>b.addEventListener('click',()=>setSensor(b.dataset.sensor)));
+document.querySelectorAll('[data-temp]').forEach(b=>b.addEventListener('click',()=>{$('resistance').value=resistanceAt(Number(b.dataset.temp)).toFixed(r0===100?3:2);update();}));
+$('resistance').addEventListener('input',update);
+update();
+</script></body></html>
