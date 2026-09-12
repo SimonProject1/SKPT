@@ -1,1 +1,51 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#071828"><link rel="icon" href="../assets/icon-192.png"><link rel="stylesheet" href="../assets/styles.css"><title>P+F Rechner · Bayer PLT Tools</title></head><body><div class="shell"><header class="topbar"><img src="../assets/bayer-logo.webp" alt="Bayer Logo"><div class="brand">Bayer PLT Tools<small>P+F RECHNER</small></div><nav><a class="back" href="../">← Startseite</a></nav></header><main><section class="page-title"><div class="eyebrow">Zweipunkt-Kalibrierung</div><h1>P+F Rechner</h1><p>K-Faktor und Nullpunkt einer linearen Funktion berechnen.</p></section><section class="panel"><p class="info">Grundlage: <b>Y = K × X + Nullpunkt</b>. Gib zwei bekannte Wertepaare ein.</p><div class="grid two"><label><span>X₁ · Eingangswert 1</span><input id="x1" type="number" step="any" value="0"></label><label><span>Y₁ · Ausgangswert 1</span><input id="y1" type="number" step="any" value="4"></label><label><span>X₂ · Eingangswert 2</span><input id="x2" type="number" step="any" value="10"></label><label><span>Y₂ · Ausgangswert 2</span><input id="y2" type="number" step="any" value="20"></label></div><p class="warning" id="warning"></p></section><section class="grid two"><div class="result"><div><div class="label">K-Faktor</div><strong id="k">1,600000</strong></div></div><div class="result"><div><div class="label">Nullpunkt</div><strong id="zero">4,000000</strong></div></div></section><section class="panel" style="margin-top:20px"><div class="eyebrow">Rechenweg</div><p class="formula" id="fk"></p><p class="formula" id="fz"></p><div class="divider"></div><div class="grid two"><label><span>Optionaler X-Wert zur Prüfung</span><input id="testx" type="number" value="6" step="any"></label><div class="result"><div><div class="label">Berechneter Y-Wert</div><strong id="testy">13,600000</strong></div></div></div></section></main><footer class="footer">Bayer PLT Tools</footer></div><script>const $=x=>document.getElementById(x),n=x=>parseFloat($(x).value),f=x=>new Intl.NumberFormat('de-DE',{minimumFractionDigits:6,maximumFractionDigits:6}).format(x);function calc(){const x1=n('x1'),y1=n('y1'),x2=n('x2'),y2=n('y2'),tx=n('testx');$('warning').textContent='';if([x1,y1,x2,y2].some(v=>!Number.isFinite(v))||x1===x2){$('k').textContent=$('zero').textContent='–';$('warning').textContent='X₁ und X₂ müssen gültig und unterschiedlich sein.';return}const k=(y2-y1)/(x2-x1),z=y1-k*x1;$('k').textContent=f(k);$('zero').textContent=f(z);$('fk').textContent=`K = (Y₂ − Y₁) / (X₂ − X₁) = (${y2} − ${y1}) / (${x2} − ${x1}) = ${f(k)}`;$('fz').textContent=`Nullpunkt = Y₁ − K × X₁ = ${y1} − ${f(k)} × ${x1} = ${f(z)}`;$('testy').textContent=Number.isFinite(tx)?f(k*tx+z):'–'}['x1','y1','x2','y2','testx'].forEach(i=>$(i).addEventListener('input',calc));calc();</script></body></html>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071828">
+<link rel="icon" href="../assets/icon-192.png">
+<link rel="stylesheet" href="../assets/styles.css">
+<title>P+F Rechner · Bayer PLT Tools</title>
+<style>
+.pf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.pf-input input{font-size:24px;font-weight:800;border-color:var(--line)}.pf-input input:focus{border-color:var(--cyan)}.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.result-card{position:relative;overflow:hidden;padding:26px;border:1px solid #ffffff17;border-radius:22px;background:linear-gradient(145deg,#0e2c43ed,#081e30f2);box-shadow:var(--shadow)}.result-card:after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;right:-60px;bottom:-80px;background:var(--cyan);filter:blur(55px);opacity:.18}.result-card span{display:block;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.result-card strong{display:block;margin-top:10px;color:var(--green);font-size:clamp(38px,7vw,58px);line-height:1;overflow-wrap:anywhere}.formula-box{display:grid;gap:12px}.formula-line{padding:14px;border:1px solid var(--line);border-radius:13px;background:#061827;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.error{display:none;margin-top:14px;padding:12px 14px;color:#ffd5d8;background:#4a1722;border:1px solid #a83b50;border-radius:12px}.action-row{display:flex;gap:10px;flex-wrap:wrap}.action{border:1px solid var(--line);border-radius:11px;background:#0a2133;color:var(--text);padding:11px 14px;font:inherit;font-weight:800;cursor:pointer}.note{border-left:3px solid var(--cyan);padding:12px 14px;background:#071a2a;border-radius:10px;color:var(--muted);font-size:13px}@media(max-width:700px){.pf-grid,.result-grid{grid-template-columns:1fr}.pf-input input{font-size:21px}}
+</style>
+</head>
+<body><div class="shell">
+<header class="topbar"><img src="../assets/bayer-logo.webp" alt="Bayer Logo"><div class="brand">Bayer PLT Tools<small>P+F RECHNER</small></div><nav><a class="back" href="../">← Startseite</a></nav></header>
+<main>
+<section class="page-title"><div class="eyebrow">Lineare Parametrierung</div><h1>P+F Rechner</h1><p>Nullpunkt und K-Faktor automatisch aus Messbereich und Einheitssignal berechnen.</p></section>
+<section class="panel"><div class="eyebrow">Eingabewerte</div><div class="divider"></div><div class="pf-grid">
+<label class="pf-input"><span>Messbereichsanfang</span><input id="rangeStart" type="number" inputmode="decimal" step="any" value="0"></label>
+<label class="pf-input"><span>Messbereichsende</span><input id="rangeEnd" type="number" inputmode="decimal" step="any" value="100"></label>
+<label class="pf-input"><span>Einheitssignalanfang</span><input id="signalStart" type="number" inputmode="decimal" step="any" value="4"></label>
+<label class="pf-input"><span>Einheitssignalende</span><input id="signalEnd" type="number" inputmode="decimal" step="any" value="20"></label>
+</div><div class="error" id="error" role="alert"></div><div class="divider"></div><div class="action-row"><button class="action" id="reset" type="button">Auf 0 / 100 / 4 / 20 zurücksetzen</button></div></section>
+<section class="result-grid"><article class="result-card"><span>K-Faktor</span><strong id="factor">6,250000</strong></article><article class="result-card"><span>Nullpunkt</span><strong id="zero">4,000000</strong></article></section>
+<section class="panel"><div class="eyebrow">Rechenweg</div><div class="divider"></div><div class="formula-box"><div class="formula-line" id="factorFormula"></div><div class="formula-line" id="zeroFormula"></div></div><div class="divider"></div><p class="note">Der Nullpunkt wird exakt mit der vorgegebenen Formel und dem festen Faktor 20 berechnet.</p></section>
+</main><footer class="footer">Bayer PLT Tools · Entwickelt von Simon Kiesler</footer></div>
+<script>
+const $=id=>document.getElementById(id);
+const ids=['rangeStart','rangeEnd','signalStart','signalEnd'];
+const number=id=>Number.parseFloat($(id).value);
+const format=value=>Number.isFinite(value)?new Intl.NumberFormat('de-DE',{minimumFractionDigits:6,maximumFractionDigits:6}).format(value):'–';
+function showError(message){$('error').textContent=message;$('error').style.display='block';$('factor').textContent='–';$('zero').textContent='–';$('factorFormula').textContent='Keine Berechnung möglich.';$('zeroFormula').textContent='Bitte Eingabewerte prüfen.'}
+function calculate(){
+ const rangeStart=number('rangeStart'),rangeEnd=number('rangeEnd'),signalStart=number('signalStart'),signalEnd=number('signalEnd');
+ $('error').style.display='none';
+ if([rangeStart,rangeEnd,signalStart,signalEnd].some(v=>!Number.isFinite(v))){showError('Bitte alle vier Eingabefelder vollständig ausfüllen.');return}
+ const rangeSpan=rangeEnd-rangeStart,signalSpan=signalEnd-signalStart;
+ if(signalSpan===0){showError('Einheitssignalanfang und Einheitssignalende dürfen nicht identisch sein.');return}
+ if(rangeSpan===0){showError('Messbereichsanfang und Messbereichsende dürfen nicht identisch sein.');return}
+ const factor=rangeSpan/signalSpan;
+ if(factor===0){showError('Der berechnete K-Faktor darf nicht 0 sein.');return}
+ const zero=(0-(rangeEnd-factor*20))/factor;
+ $('factor').textContent=format(factor);$('zero').textContent=format(zero);
+ $('factorFormula').textContent=`K-Faktor = (${rangeEnd} − ${rangeStart}) / (${signalEnd} − ${signalStart}) = ${format(factor)}`;
+ $('zeroFormula').textContent=`Nullpunkt = (0 − (${rangeEnd} − ${format(factor)} × 20)) / ${format(factor)} = ${format(zero)}`;
+}
+ids.forEach(id=>$(id).addEventListener('input',calculate));
+$('reset').addEventListener('click',()=>{const values=[0,100,4,20];ids.forEach((id,i)=>$(id).value=values[i]);calculate()});
+calculate();
+</script>
+</body></html>
