@@ -1,7 +1,7 @@
-const CACHE='bayer-plt-tools-v0-3-4-stabilisierung';
+const CACHE='bayer-plt-tools-v0-3-4-1-stabilisierung';
 const CORE=['./','./index.html','./assets/styles.css','./assets/start-mobile.css','./assets/app.js','./assets/stabilisierung.css','./assets/stabilisierung.js','./assets/bayer-logo.webp','./assets/bayer-logo-web.webp','./assets/icon-192.png','./assets/icon-512.png','./analogsignal/','./analogsignal/index.html','./pf-rechner/','./pf-rechner/index.html','./pt-rechner/','./pt-rechner/index.html','./messstellen-doku/','./messstellen-doku/index.html','./servicewerte/','./servicewerte/index.html'];
 const INJECT='<link rel="stylesheet" href="__BASE__assets/stabilisierung.css"><script defer src="__BASE__assets/stabilisierung.js"></script>';
-function baseFor(url){const parts=new URL(url).pathname.split('/').filter(Boolean);return parts.length>1?'../':'./'}
+function baseFor(url){const path=new URL(url).pathname;return /\/(analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte)\//.test(path)?'../':'./'}
 async function inject(response,request){
  if(!response||!response.ok)return response;
  const type=response.headers.get('content-type')||'';
