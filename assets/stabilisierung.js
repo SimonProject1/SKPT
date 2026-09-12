@@ -1,65 +1,12 @@
 (()=>{'use strict';
-const APP_VERSION='0.7.0';
-const DEVELOPER='Simon Kiesler';
+const APP_VERSION='0.7.1',DEVELOPER='Simon Kiesler',SUPPORT_EMAIL='simon.kiesler@bayer.com';
 const MODULES=['analogsignal','pf-rechner','pt-rechner','messstellen-doku','servicewerte','einheitenrechner','wissensdatenbank'];
-
-function projectBase(){
-  const path=location.pathname;
-  const hits=MODULES.map(name=>path.indexOf('/'+name+'/')).filter(index=>index>=0);
-  if(hits.length)return path.slice(0,Math.min(...hits)+1);
-  return path.endsWith('/')?path:path.slice(0,path.lastIndexOf('/')+1);
+function projectBase(){const path=location.pathname;const hits=MODULES.map(n=>path.indexOf('/'+n+'/')).filter(i=>i>=0);return hits.length?path.slice(0,Math.min(...hits)+1):(path.endsWith('/')?path:path.slice(0,path.lastIndexOf('/')+1))}
+function pageName(){return document.querySelector('h1')?.textContent.trim()||document.title||'Unbekannte Seite'}
+function logos(){const src=projectBase()+'assets/bayer-logo-web.webp?v=0.7.1';document.querySelectorAll('.topbar img,.hero-logo img').forEach(i=>{i.src=src;i.alt='Bayer Logo'})}
+function version(){document.querySelectorAll('.badge,.header-meta strong').forEach(e=>{if(/^Version\s+[\d.]+$/i.test(e.textContent.trim()))e.textContent='Version '+APP_VERSION})}
+function footer(){const f=document.querySelector('footer.footer');if(!f)return;f.classList.add('stb-footer');f.innerHTML=`Bayer PLT Tools · <span class="stb-version">Version ${APP_VERSION}</span> · Entwickelt von ${DEVELOPER}`}
+function negative(){if(!location.pathname.includes('/analogsignal/'))return;['p0','p1','s0','s1','x'].forEach(id=>{const i=document.getElementById(id);if(!i||i.dataset.signReady)return;i.dataset.signReady='1';const w=document.createElement('div');w.className='stb-signed-input';i.parentNode.insertBefore(w,i);w.appendChild(i);const b=document.createElement('button');b.type='button';b.className='stb-sign-button';b.textContent='±';b.onclick=()=>{const v=parseFloat(String(i.value||'').replace(',','.'));i.value=Number.isFinite(v)?String(v===0?0:-v):'-';i.dispatchEvent(new Event('input',{bubbles:true}));i.focus()};w.appendChild(b)})}
+function support(){if(document.querySelector('.stb-support-card'))return;const f=document.querySelector('footer.footer');if(!f)return;const card=document.createElement('section');card.className='stb-support-card';card.innerHTML='<div><strong>Fehler gefunden oder eine Idee?</strong><p>Feedback direkt an den Entwickler senden.</p></div><button class="stb-support-button" type="button">✉ Support & Feedback</button>';f.parentNode.insertBefore(card,f);const modal=document.createElement('div');modal.className='stb-modal-backdrop';modal.innerHTML=`<div class="stb-modal" role="dialog" aria-modal="true" aria-labelledby="stbTitle"><div class="stb-modal-head"><h2 id="stbTitle">Support & Feedback</h2><button class="stb-close" type="button" aria-label="Schließen">×</button></div><div class="stb-form-grid"><label><span>Name *</span><input id="stbName" autocomplete="name"></label><label><span>E-Mail-Adresse *</span><input id="stbEmail" type="email" autocomplete="email"></label><label class="wide"><span>Kategorie *</span><select id="stbCategory"><option value="">Bitte auswählen</option><option>Fehler melden</option><option>Fehlende Information</option><option>Neues Gerät vorschlagen</option><option>Verbesserungsidee</option><option>Sonstiges</option></select></label><label class="wide"><span>Beschreibung *</span><textarea id="stbDescription" placeholder="Was fehlt, was ist falsch oder welche Idee gibt es?"></textarea></label><label class="wide"><span>Schritte zum Nachstellen / zusätzliche Hinweise</span><textarea id="stbSteps"></textarea></label></div><div class="stb-form-error" id="stbError"></div><button class="stb-send" type="button">E-Mail vorbereiten</button><p class="stb-notice">Bitte keine Anlagenpasswörter, personenbezogenen Daten oder vertraulichen Informationen übermitteln. Die Nachricht wird erst nach Bestätigung in der E-Mail-App versendet.</p></div>`;document.body.appendChild(modal);const name=modal.querySelector('#stbName'),email=modal.querySelector('#stbEmail');name.value=localStorage.getItem('supportName')||'';email.value=localStorage.getItem('supportEmail')||'';const close=()=>modal.classList.remove('open');card.querySelector('button').onclick=()=>modal.classList.add('open');modal.querySelector('.stb-close').onclick=close;modal.onclick=e=>{if(e.target===modal)close()};modal.querySelector('.stb-send').onclick=()=>{const n=name.value.trim(),em=email.value.trim(),cat=modal.querySelector('#stbCategory').value,desc=modal.querySelector('#stbDescription').value.trim(),steps=modal.querySelector('#stbSteps').value.trim(),err=modal.querySelector('#stbError');if(!n||!em||!cat||!desc){err.textContent='Bitte Name, E-Mail-Adresse, Kategorie und Beschreibung ausfüllen.';return}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.textContent='Bitte eine gültige E-Mail-Adresse eingeben.';return}localStorage.setItem('supportName',n);localStorage.setItem('supportEmail',em);err.textContent='';const subject=`Bayer PLT Tools ${APP_VERSION} – ${cat}`;const body=`Hallo Simon,\n\nName: ${n}\nE-Mail: ${em}\n\nKategorie: ${cat}\nBetroffene Seite: ${pageName()}\nApp-Version: ${APP_VERSION}\nGerät/Browser: ${navigator.userAgent}\n\nBeschreibung:\n${desc}\n\nSchritte zum Nachstellen / Hinweise:\n${steps||'Keine Angabe'}\n\nViele Grüße\n${n}`;location.href=`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`}
 }
-
-function normalizeLogos(){
-  const source=projectBase()+'assets/bayer-logo-web.webp?v=0.7.0';
-  document.querySelectorAll('.topbar img,.hero-logo img').forEach(image=>{
-    image.src=source;
-    image.alt='Bayer Logo';
-  });
-}
-
-function normalizeNavigation(){
-  const isHome=!MODULES.some(name=>location.pathname.includes('/'+name+'/'));
-  if(isHome)return;
-  const header=document.querySelector('.topbar');
-  if(!header)return;
-  let nav=header.querySelector('nav');
-  if(!nav){nav=document.createElement('nav');header.appendChild(nav)}
-  let link=nav.querySelector('a');
-  if(!link){link=document.createElement('a');nav.appendChild(link)}
-  link.href=projectBase();
-  link.className='back stb-home-link';
-  link.textContent='← Startseite';
-  link.setAttribute('aria-label','Zurück zur Startseite');
-}
-
-function normalizeVersion(){
-  document.querySelectorAll('.badge,.header-meta strong').forEach(element=>{
-    if(/^Version\s+[\d.]+$/i.test(element.textContent.trim()))element.textContent='Version '+APP_VERSION;
-  });
-}
-
-function normalizeFooter(){
-  const footer=document.querySelector('footer.footer');
-  if(!footer)return;
-  footer.classList.add('stb-footer');
-  footer.innerHTML=`Bayer PLT Tools · <span class="stb-version">Version ${APP_VERSION}</span> · Entwickelt von ${DEVELOPER}`;
-}
-
-function enableNegativeAnalogInputs(){
-  if(!location.pathname.includes('/analogsignal/'))return;
-  ['p0','p1','s0','s1','x'].forEach(id=>{
-    const input=document.getElementById(id);
-    if(!input||input.dataset.signReady==='true')return;
-    input.dataset.signReady='true';
-    const wrapper=document.createElement('div');wrapper.className='stb-signed-input';
-    input.parentNode.insertBefore(wrapper,input);wrapper.appendChild(input);
-    const button=document.createElement('button');button.type='button';button.className='stb-sign-button';button.textContent='±';button.setAttribute('aria-label','Vorzeichen wechseln');
-    button.onclick=()=>{const value=Number.parseFloat(String(input.value||'').replace(',','.'));input.value=Number.isFinite(value)?String(value===0?0:-value):'-';input.dispatchEvent(new Event('input',{bubbles:true}));input.focus()};
-    wrapper.appendChild(button);
-  });
-}
-
-function run(){normalizeLogos();normalizeNavigation();normalizeVersion();normalizeFooter();enableNegativeAnalogInputs()}
-document.readyState==='loading'?document.addEventListener('DOMContentLoaded',run,{once:true}):run();
-})();
+function run(){logos();version();footer();negative();support()}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',run,{once:true}):run()})();
