@@ -1,5 +1,23 @@
-const C='bayer-plt-tools-v0-3-3-service-mobile';
-const F=['./','./index.html','./assets/styles.css','./assets/start-mobile.css','./assets/app.js','./assets/bayer-logo.webp','./assets/bayer-logo-web.webp','./assets/icon-192.png','./assets/icon-512.png','./analogsignal/','./analogsignal/index.html','./pf-rechner/','./pf-rechner/index.html','./pt-rechner/','./pt-rechner/index.html','./messstellen-doku/','./messstellen-doku/index.html','./servicewerte/','./servicewerte/index.html'];
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(F)))});
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(C).then(c=>c.put(e.request,copy));return r}).catch(()=>caches.match(e.request))));
+const CACHE='bayer-plt-tools-v0-3-4-stabilisierung';
+const CORE=['./','./index.html','./assets/styles.css','./assets/start-mobile.css','./assets/app.js','./assets/stabilisierung.css','./assets/stabilisierung.js','./assets/bayer-logo.webp','./assets/bayer-logo-web.webp','./assets/icon-192.png','./assets/icon-512.png','./analogsignal/','./analogsignal/index.html','./pf-rechner/','./pf-rechner/index.html','./pt-rechner/','./pt-rechner/index.html','./messstellen-doku/','./messstellen-doku/index.html','./servicewerte/','./servicewerte/index.html'];
+const INJECT='<link rel="stylesheet" href="__BASE__assets/stabilisierung.css"><script defer src="__BASE__assets/stabilisierung.js"></script>';
+function baseFor(url){const parts=new URL(url).pathname.split('/').filter(Boolean);return parts.length>1?'../':'./'}
+async function inject(response,request){
+ if(!response||!response.ok)return response;
+ const type=response.headers.get('content-type')||'';
+ if(!type.includes('text/html'))return response;
+ let html=await response.text();
+ if(!html.includes('stabilisierung.js'))html=html.replace('</head>',INJECT.replaceAll('__BASE__',baseFor(request.url))+'</head>');
+ const headers=new Headers(response.headers);headers.delete('content-length');headers.set('content-type','text/html; charset=utf-8');
+ return new Response(html,{status:response.status,statusText:response.statusText,headers});
+}
+self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)))});
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',event=>{
+ const request=event.request;
+ if(request.mode==='navigate'){
+   event.respondWith(fetch(request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(request,copy));return inject(response,request)}).catch(()=>caches.match(request).then(response=>inject(response,request))));
+   return;
+ }
+ event.respondWith(fetch(request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(request,copy));return response}).catch(()=>caches.match(request)));
+});
