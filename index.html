@@ -10,56 +10,35 @@
 <link rel="apple-touch-icon" href="assets/icon-512.png">
 <link rel="icon" href="assets/icon-192.png">
 <link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/start-mobile.css">
 <title>Bayer PLT Tools</title>
 </head>
 <body>
-<div class="shell">
-<header class="topbar">
-<img src="assets/bayer-logo.webp" alt="Bayer Logo">
+<div class="shell start-shell">
+<header class="topbar start-topbar">
+<img class="header-logo" src="assets/bayer-logo-web.webp" alt="Bayer Logo">
 <div class="brand">Bayer PLT Tools<small>PROCESS CONTROL TOOLBOX</small></div>
+<div class="header-meta"><strong>Version 0.3</strong><span>Entwickelt von Simon Kiesler</span></div>
 <nav><a class="navlink" href="#tools">Tools</a></nav>
 </header>
 <main>
-<section class="hero">
-<div>
+<section class="hero start-hero">
+<div class="hero-copy">
 <div class="eyebrow">Prozessleittechnik · MSR · Inbetriebnahme</div>
-<h1>Werkzeuge, die im Feld weiterhelfen.</h1>
-<p>Ein modernes, mobil optimiertes Portal für schnelle Berechnungen und Dokumentation auf PC und iPhone.</p>
-<span class="badge">Version 0.3</span>
+<h1>PLT-Werkzeuge für den Einsatz im Feld</h1>
+<p>Schnelle Berechnungen und Dokumentation für PC und iPhone.</p>
+<span class="badge desktop-version">Version 0.3</span>
 </div>
-<div class="hero-logo"><img src="assets/bayer-logo.webp" alt="Bayer Logo"></div>
+<div class="hero-logo"><img src="assets/bayer-logo-web.webp" alt="Bayer Logo"></div>
 </section>
-<section class="section" id="tools">
-<div class="section-head">
-<div><div class="eyebrow">Tool-Auswahl</div><h2>Werkzeuge</h2></div>
-<p>Für Prozessleittechnik und Inbetriebnahme.</p>
-</div>
-<div class="tools">
-<a class="tool-card" href="analogsignal/">
-<div class="icon">↗</div><h3>Analogsignal-Rechner</h3>
-<p>Lineare Umrechnung zwischen Prozesswert und Analogsignal, beispielsweise 4–20 mA oder 0–10 V.</p>
-<div class="open">Rechner öffnen →</div>
-</a>
-<a class="tool-card" href="pf-rechner/">
-<div class="icon">K</div><h3>P+F Rechner</h3>
-<p>K-Faktor und Nullpunkt aus Messbereich und Einheitssignal berechnen.</p>
-<div class="open">Rechner öffnen →</div>
-</a>
-<a class="tool-card" href="pt-rechner/">
-<div class="icon">ϑ</div><h3>Pt-Rechner</h3>
-<p>Widerstand von Pt100 oder Pt1000 in Temperatur umrechnen.</p>
-<div class="open">Rechner öffnen →</div>
-</a>
-<a class="tool-card" href="messstellen-doku/">
-<div class="icon">▣</div><h3>Messstellen-Dokumentation</h3>
-<p>Messstelle, Typenschild, Einbausituation und Bemerkung als PDF dokumentieren.</p>
-<div class="open">Dokumentation öffnen →</div>
-</a>
-<a class="tool-card" href="servicewerte/">
-<div class="icon">🔑</div><h3>Servicewerte &amp; Initial-PINs</h3>
-<p>Öffentlich dokumentierte Initialwerte und Service-PINs von Feldgeräten schnell finden.</p>
-<div class="open">Katalog öffnen →</div>
-</a>
+<section class="section start-section" id="tools">
+<div class="section-head start-section-head"><div><div class="eyebrow">Tool-Auswahl</div><h2>Werkzeuge</h2></div><p>Für Prozessleittechnik und Inbetriebnahme.</p></div>
+<div class="tools start-tools">
+<a class="tool-card" href="analogsignal/"><div class="icon">↗</div><h3>Analogsignal-Rechner</h3><p>Prozesswert und Analogsignal umrechnen.</p><div class="open">Öffnen →</div></a>
+<a class="tool-card" href="pf-rechner/"><div class="icon">K</div><h3>P+F Rechner</h3><p>K-Faktor und Nullpunkt berechnen.</p><div class="open">Öffnen →</div></a>
+<a class="tool-card" href="pt-rechner/"><div class="icon">ϑ</div><h3>Pt-Rechner</h3><p>Pt100 / Pt1000 Widerstand und Temperatur.</p><div class="open">Öffnen →</div></a>
+<a class="tool-card" href="messstellen-doku/"><div class="icon">▣</div><h3>Messstellen-Dokumentation</h3><p>Fotos aufnehmen und als PDF dokumentieren.</p><div class="open">Öffnen →</div></a>
+<a class="tool-card" href="servicewerte/"><div class="icon">🔑</div><h3>Servicewerte &amp; Initial-PINs</h3><p>Initial-PINs und Servicewerte von Feldgeräten.</p><div class="open">Öffnen →</div></a>
 </div>
 </section>
 </main>
