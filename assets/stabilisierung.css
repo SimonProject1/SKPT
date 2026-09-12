@@ -1,0 +1,9 @@
+/* Bayer PLT Tools V0.3.4: gemeinsame Navigation, Versionierung und Footer */
+:root{--stb-touch:44px}
+.stb-home-link{display:inline-flex;align-items:center;justify-content:center;min-height:var(--stb-touch);padding:9px 14px;border:1px solid var(--line,#2b4a60);border-radius:12px;text-decoration:none;color:var(--text,#f7fbff);background:#0a2133cc;font-weight:750;white-space:nowrap}
+.stb-home-link:hover,.stb-home-link:focus-visible{border-color:var(--cyan,#00b8e8);outline:none}
+.stb-version{color:var(--green,#89d329);font-weight:800}
+.footer.stb-footer{display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap;text-align:center}
+.footer.stb-footer .stb-separator{color:var(--muted,#a9bdcc)}
+@media(max-width:760px){.topbar{min-height:70px;height:auto;padding-top:9px;padding-bottom:9px}.topbar nav{margin-left:auto;display:flex}.stb-home-link{min-height:42px;padding:8px 11px;font-size:13px}.footer.stb-footer{padding-left:14px;padding-right:14px;font-size:10px;line-height:1.5}}
+@media(max-width:390px){.topbar .brand small{max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stb-home-link{font-size:0;width:42px;padding:0}.stb-home-link::before{content:'←';font-size:20px}}
