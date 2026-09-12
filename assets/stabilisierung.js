@@ -1,70 +1,7 @@
-(() => {
-  'use strict';
-  const APP_VERSION = '0.5.1';
-  const DEVELOPER = 'Simon Kiesler';
-  const path = location.pathname.replace(/\/+$/, '/');
-  const isHome = !/(analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte|einheitenrechner)\//.test(path);
-
-  function normalizeNavigation(){
-    const header=document.querySelector('.topbar');
-    if(!header||isHome)return;
-    let nav=header.querySelector('nav');
-    if(!nav){nav=document.createElement('nav');header.appendChild(nav)}
-    let back=nav.querySelector('a[href="../"],a.back,.stb-home-link');
-    if(!back){back=document.createElement('a');nav.appendChild(back)}
-    back.href='../';
-    back.className='back stb-home-link';
-    back.textContent='← Startseite';
-    back.setAttribute('aria-label','Zurück zur Startseite');
-  }
-
-  function normalizeWebLogo(){
-    const logoPath=isHome?'assets/bayer-logo-web.webp':'../assets/bayer-logo-web.webp';
-    document.querySelectorAll('.topbar img').forEach(img=>{
-      img.src=logoPath;
-      img.alt='Bayer Logo';
-    });
-    if(isHome){
-      document.querySelectorAll('.hero-logo img').forEach(img=>{
-        img.src=logoPath;
-        img.alt='Bayer Logo';
-      });
-    }
-  }
-
-  function enableNegativeAnalogInputs(){
-    if(!/\/analogsignal\//.test(location.pathname))return;
-    ['p0','p1','s0','s1','x'].forEach(id=>{
-      const input=document.getElementById(id);
-      if(!input||input.dataset.signReady==='true')return;
-      input.dataset.signReady='true';
-      const wrapper=document.createElement('div');wrapper.className='stb-signed-input';
-      input.parentNode.insertBefore(wrapper,input);wrapper.appendChild(input);
-      const button=document.createElement('button');button.type='button';button.className='stb-sign-button';button.textContent='±';button.setAttribute('aria-label','Vorzeichen wechseln');
-      button.addEventListener('click',()=>{const value=Number.parseFloat(String(input.value||'').replace(',','.'));input.value=Number.isFinite(value)?String(value===0?0:-value):'-';input.dispatchEvent(new Event('input',{bubbles:true}));input.focus()});
-      wrapper.appendChild(button);
-    });
-  }
-
-  function normalizeVersion(){
-    document.querySelectorAll('.badge').forEach(el=>{
-      if(/^Version\s+[\d.]+$/i.test(el.textContent.trim())) el.textContent=`Version ${APP_VERSION}`;
-    });
-    document.querySelectorAll('.header-meta strong').forEach(el=>{
-      if(/^Version\s+/i.test(el.textContent.trim())) el.textContent=`Version ${APP_VERSION}`;
-    });
-    const title=document.querySelector('.brand small');
-    if(title) title.setAttribute('data-app-version',APP_VERSION);
-  }
-
-  function normalizeFooter(){
-    let footer=document.querySelector('footer.footer');
-    if(!footer){footer=document.createElement('footer');footer.className='footer';document.querySelector('.shell')?.appendChild(footer)}
-    if(!footer)return;
-    footer.classList.add('stb-footer');
-    footer.innerHTML=`<span>Bayer PLT Tools</span><span class="stb-separator">·</span><span class="stb-version">Version ${APP_VERSION}</span><span class="stb-separator">·</span><span>Entwickelt von ${DEVELOPER}</span>`;
-  }
-
-  function run(){normalizeWebLogo();normalizeNavigation();enableNegativeAnalogInputs();normalizeVersion();normalizeFooter()}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
-})();
+(()=>{'use strict';const APP_VERSION='0.5.2',DEVELOPER='Simon Kiesler';const MODULES='analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte|einheitenrechner';const isHome=!new RegExp('/('+MODULES+')/').test(location.pathname);
+function logo(){const src=isHome?'assets/bayer-logo-web.webp':'../assets/bayer-logo-web.webp';document.querySelectorAll('.topbar img').forEach(i=>{i.src=src;i.alt='Bayer Logo'});if(isHome)document.querySelectorAll('.hero-logo img').forEach(i=>{i.src=src;i.alt='Bayer Logo'})}
+function nav(){if(isHome)return;const h=document.querySelector('.topbar');if(!h)return;let n=h.querySelector('nav');if(!n){n=document.createElement('nav');h.appendChild(n)}let a=n.querySelector('a');if(!a){a=document.createElement('a');n.appendChild(a)}a.href='../';a.className='back stb-home-link';a.textContent='← Startseite';a.setAttribute('aria-label','Zurück zur Startseite')}
+function negative(){if(!/\/analogsignal\//.test(location.pathname))return;['p0','p1','s0','s1','x'].forEach(id=>{const i=document.getElementById(id);if(!i||i.dataset.signReady==='true')return;i.dataset.signReady='true';const w=document.createElement('div');w.className='stb-signed-input';i.parentNode.insertBefore(w,i);w.appendChild(i);const b=document.createElement('button');b.type='button';b.className='stb-sign-button';b.textContent='±';b.setAttribute('aria-label','Vorzeichen wechseln');b.onclick=()=>{const v=Number.parseFloat(String(i.value||'').replace(',','.'));i.value=Number.isFinite(v)?String(v===0?0:-v):'-';i.dispatchEvent(new Event('input',{bubbles:true}));i.focus()};w.appendChild(b)})}
+function version(){document.querySelectorAll('.badge').forEach(e=>{if(/^Version\s+[\d.]+$/i.test(e.textContent.trim()))e.textContent='Version '+APP_VERSION});document.querySelectorAll('.header-meta strong').forEach(e=>{if(/^Version\s+/i.test(e.textContent.trim()))e.textContent='Version '+APP_VERSION})}
+function footer(){let f=document.querySelector('footer.footer');if(!f){f=document.createElement('footer');f.className='footer';document.querySelector('.shell')?.appendChild(f)}if(!f)return;f.classList.add('stb-footer');f.innerHTML=`<span>Bayer PLT Tools</span><span class="stb-separator">·</span><span class="stb-version">Version ${APP_VERSION}</span><span class="stb-separator">·</span><span>Entwickelt von ${DEVELOPER}</span>`}
+function run(){logo();nav();negative();version();footer()}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',run,{once:true}):run()})();
