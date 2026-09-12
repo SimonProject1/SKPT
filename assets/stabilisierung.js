@@ -1,9 +1,9 @@
 (() => {
   'use strict';
-  const APP_VERSION = '0.5';
+  const APP_VERSION = '0.5.1';
   const DEVELOPER = 'Simon Kiesler';
   const path = location.pathname.replace(/\/+$/, '/');
-  const isHome = !/(analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte)\//.test(path);
+  const isHome = !/(analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte|einheitenrechner)\//.test(path);
 
   function normalizeNavigation(){
     const header=document.querySelector('.topbar');

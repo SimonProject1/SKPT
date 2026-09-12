@@ -9,3 +9,6 @@
 @media(max-width:390px){.topbar .brand small{max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stb-home-link{font-size:0;width:42px;padding:0}.stb-home-link::before{content:'←';font-size:20px}}
 
 .stb-signed-input{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:8px;align-items:stretch}.stb-signed-input input{min-width:0}.stb-sign-button{border:1px solid var(--line,#2b4a60);border-radius:13px;background:#0a2133;color:var(--text,#f7fbff);font:inherit;font-size:21px;font-weight:900;cursor:pointer;min-height:48px}.stb-sign-button:active{background:var(--cyan,#00b8e8);color:#06141d}
+
+/* V0.5.1: Bei gerader Kartenanzahl keine Karte ueber beide Spalten ziehen */
+@media(min-width:761px){.start-tools .tool-card:last-child{grid-column:auto}}
