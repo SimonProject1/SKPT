@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const APP_VERSION = '0.4.1';
+  const APP_VERSION = '0.5';
   const DEVELOPER = 'Simon Kiesler';
   const path = location.pathname.replace(/\/+$/, '/');
   const isHome = !/(analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte)\//.test(path);
