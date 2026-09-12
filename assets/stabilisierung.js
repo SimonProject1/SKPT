@@ -18,6 +18,20 @@
     back.setAttribute('aria-label','Zurück zur Startseite');
   }
 
+  function normalizeWebLogo(){
+    const logoPath=isHome?'assets/bayer-logo-web.webp':'../assets/bayer-logo-web.webp';
+    document.querySelectorAll('.topbar img').forEach(img=>{
+      img.src=logoPath;
+      img.alt='Bayer Logo';
+    });
+    if(isHome){
+      document.querySelectorAll('.hero-logo img').forEach(img=>{
+        img.src=logoPath;
+        img.alt='Bayer Logo';
+      });
+    }
+  }
+
   function normalizeVersion(){
     document.querySelectorAll('.badge').forEach(el=>{
       if(/^Version\s+[\d.]+$/i.test(el.textContent.trim())) el.textContent=`Version ${APP_VERSION}`;
@@ -37,6 +51,6 @@
     footer.innerHTML=`<span>Bayer PLT Tools</span><span class="stb-separator">·</span><span class="stb-version">Version ${APP_VERSION}</span><span class="stb-separator">·</span><span>Entwickelt von ${DEVELOPER}</span>`;
   }
 
-  function run(){normalizeNavigation();normalizeVersion();normalizeFooter()}
+  function run(){normalizeWebLogo();normalizeNavigation();normalizeVersion();normalizeFooter()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
 })();
