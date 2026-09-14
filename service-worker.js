@@ -1,26 +1,26 @@
-const CACHE='bayer-plt-tools-v1-0-1-photo-page-fix';
-const CORE=['./','./index.html','./assets/styles.css','./assets/start-mobile.css','./assets/app.js','./assets/stabilisierung.css','./assets/stabilisierung.js','./assets/efup-photo-page-fix.js','./assets/bayer-logo-web.webp','./assets/icon-192.png','./assets/icon-512.png'];
+const CACHE='bayer-plt-tools-v1-0-1-final';
+const CORE=['./','./index.html','./assets/styles.css','./assets/start-mobile.css','./assets/app.js','./assets/stabilisierung.css','./assets/stabilisierung.js','./assets/efup-photo-page-fix.js','./assets/app-version-1.0.1.js','./assets/bayer-logo-web.webp','./assets/icon-192.png','./assets/icon-512.png'];
 const MODULES='analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte|einheitenrechner|wissensdatenbank';
-const INJECT='<link rel="stylesheet" href="__BASE__assets/stabilisierung.css?v=1.0.1"><script defer src="__BASE__assets/stabilisierung.js?v=1.0.1"></script><script defer src="__BASE__assets/efup-photo-page-fix.js?v=1.0.1"></script>';
+const INJECT='<link rel="stylesheet" href="__BASE__assets/stabilisierung.css?v=1.0.1"><script defer src="__BASE__assets/stabilisierung.js?v=1.0.1"></script><script defer src="__BASE__assets/efup-photo-page-fix.js?v=1.0.1"></script><script defer src="__BASE__assets/app-version-1.0.1.js?v=1.0.1"></script>';
 function base(url){const p=new URL(url).pathname,m=p.match(new RegExp('/('+MODULES+')/'));return m?p.slice(0,m.index+1):(p.endsWith('/')?p:p.slice(0,p.lastIndexOf('/')+1))}
 function patchPhotoPages(html){
-  if(!html.includes('/messstellen-doku/') && !html.includes('Messstellen-Dokumentation')) return html;
+  if(!html.includes('/messstellen-doku/')&&!html.includes('Messstellen-Dokumentation'))return html;
   const patterns=[
-    ["if($(key+'None').checked)entries.push({title,note:'Foto nicht benoetigt.'});else", "if($(key+'None').checked){}else"],
-    ["if ($(key + 'None').checked) entries.push({ title, note: 'Foto nicht benoetigt.' }); else", "if ($(key + 'None').checked) {} else"],
-    ["if($(key+'None').checked){entries.push({title,note:'Foto nicht benoetigt.'})}else", "if($(key+'None').checked){}else"]
+    ["if($(key+'None').checked)entries.push({title,note:'Foto nicht benoetigt.'});else","if($(key+'None').checked){}else"],
+    ["if ($(key + 'None').checked) entries.push({ title, note: 'Foto nicht benoetigt.' }); else","if ($(key + 'None').checked) {} else"],
+    ["if($(key+'None').checked){entries.push({title,note:'Foto nicht benoetigt.'})}else","if($(key+'None').checked){}else"]
   ];
-  for(const [oldText,newText] of patterns) html=html.replace(oldText,newText);
+  for(const [oldText,newText] of patterns)html=html.replace(oldText,newText);
   return html;
 }
 async function enhance(r,q){
   if(!r||!r.ok||!(r.headers.get('content-type')||'').includes('text/html'))return r;
-  let h=await r.text(),b=base(q.url);
-  h=patchPhotoPages(h);
+  let h=patchPhotoPages(await r.text()),b=base(q.url);
   h=h.replace(/<link[^>]+stabilisierung\.css[^>]*>/gi,'')
      .replace(/<script[^>]+stabilisierung\.js[^>]*><\/script>/gi,'')
      .replace(/<script[^>]+version-release\.js[^>]*><\/script>/gi,'')
      .replace(/<script[^>]+efup-photo-page-fix\.js[^>]*><\/script>/gi,'')
+     .replace(/<script[^>]+app-version-1\.0\.1\.js[^>]*><\/script>/gi,'')
      .replace('</head>',INJECT.replaceAll('__BASE__',b)+'</head>');
   const x=new Headers(r.headers);x.delete('content-length');x.set('content-type','text/html; charset=utf-8');
   return new Response(h,{status:r.status,statusText:r.statusText,headers:x});
