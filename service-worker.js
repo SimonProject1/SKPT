@@ -1,30 +1,7 @@
-const CACHE='bayer-plt-tools-v1-0-1-final';
-const CORE=['./','./index.html','./assets/styles.css','./assets/start-mobile.css','./assets/app.js','./assets/stabilisierung.css','./assets/stabilisierung.js','./assets/efup-photo-page-fix.js','./assets/app-version-1.0.1.js','./assets/bayer-logo-web.webp','./assets/icon-192.png','./assets/icon-512.png'];
+const CACHE='bayer-plt-tools-v1-1-0-wissensvorlage';
+const CORE=['./','./index.html','./assets/styles.css','./assets/start-mobile.css','./assets/app.js','./assets/stabilisierung.css','./assets/stabilisierung.js','./assets/efup-photo-page-fix.js','./assets/app-version-1.0.1.js','./assets/wissensvorlage-integration.css','./assets/wissensvorlage-integration.js','./assets/bayer-logo-web.webp','./assets/icon-192.png','./assets/icon-512.png','./wissensdatenbank/','./wissensdatenbank/index.html','./wissensdatenbank/vorlagen/Wissensdatenbank_Beitragsvorlage.docx'];
 const MODULES='analogsignal|pf-rechner|pt-rechner|messstellen-doku|servicewerte|einheitenrechner|wissensdatenbank';
-const INJECT='<link rel="stylesheet" href="__BASE__assets/stabilisierung.css?v=1.0.1"><script defer src="__BASE__assets/stabilisierung.js?v=1.0.1"></script><script defer src="__BASE__assets/efup-photo-page-fix.js?v=1.0.1"></script><script defer src="__BASE__assets/app-version-1.0.1.js?v=1.0.1"></script>';
 function base(url){const p=new URL(url).pathname,m=p.match(new RegExp('/('+MODULES+')/'));return m?p.slice(0,m.index+1):(p.endsWith('/')?p:p.slice(0,p.lastIndexOf('/')+1))}
-function patchPhotoPages(html){
-  if(!html.includes('/messstellen-doku/')&&!html.includes('Messstellen-Dokumentation'))return html;
-  const patterns=[
-    ["if($(key+'None').checked)entries.push({title,note:'Foto nicht benoetigt.'});else","if($(key+'None').checked){}else"],
-    ["if ($(key + 'None').checked) entries.push({ title, note: 'Foto nicht benoetigt.' }); else","if ($(key + 'None').checked) {} else"],
-    ["if($(key+'None').checked){entries.push({title,note:'Foto nicht benoetigt.'})}else","if($(key+'None').checked){}else"]
-  ];
-  for(const [oldText,newText] of patterns)html=html.replace(oldText,newText);
-  return html;
-}
-async function enhance(r,q){
-  if(!r||!r.ok||!(r.headers.get('content-type')||'').includes('text/html'))return r;
-  let h=patchPhotoPages(await r.text()),b=base(q.url);
-  h=h.replace(/<link[^>]+stabilisierung\.css[^>]*>/gi,'')
-     .replace(/<script[^>]+stabilisierung\.js[^>]*><\/script>/gi,'')
-     .replace(/<script[^>]+version-release\.js[^>]*><\/script>/gi,'')
-     .replace(/<script[^>]+efup-photo-page-fix\.js[^>]*><\/script>/gi,'')
-     .replace(/<script[^>]+app-version-1\.0\.1\.js[^>]*><\/script>/gi,'')
-     .replace('</head>',INJECT.replaceAll('__BASE__',b)+'</head>');
-  const x=new Headers(r.headers);x.delete('content-length');x.set('content-type','text/html; charset=utf-8');
-  return new Response(h,{status:r.status,statusText:r.statusText,headers:x});
-}
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{const q=e.request;if(q.mode==='navigate'){e.respondWith(fetch(q,{cache:'no-store'}).then(r=>enhance(r,q)).catch(()=>caches.match(q).then(r=>enhance(r,q))));return}e.respondWith(fetch(q).catch(()=>caches.match(q)))})
+function patchPhotoPages(h){if(!h.includes('/messstellen-doku/')&&!h.includes('Messstellen-Dokumentation'))return h;return h.replace("if($(key+'None').checked)entries.push({title,note:'Foto nicht benoetigt.'});else","if($(key+'None').checked){}else")}
+async function enhance(r,q){if(!r||!r.ok||!(r.headers.get('content-type')||'').includes('text/html'))return r;let h=patchPhotoPages(await r.text()),b=base(q.url);h=h.replace(/<link[^>]+wissensvorlage-integration\.css[^>]*>/gi,'').replace(/<script[^>]+wissensvorlage-integration\.js[^>]*><\/script>/gi,'').replace('</head>',`<link rel="stylesheet" href="${b}assets/wissensvorlage-integration.css?v=1.1.0"><script defer src="${b}assets/wissensvorlage-integration.js?v=1.1.0"></script></head>`);const x=new Headers(r.headers);x.delete('content-length');x.set('content-type','text/html; charset=utf-8');return new Response(h,{status:r.status,statusText:r.statusText,headers:x})}
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));self.addEventListener('fetch',e=>{const q=e.request;if(q.mode==='navigate'){e.respondWith(fetch(q,{cache:'no-store'}).then(r=>enhance(r,q)).catch(()=>caches.match(q).then(r=>enhance(r,q))));return}e.respondWith(fetch(q).catch(()=>caches.match(q)))})
