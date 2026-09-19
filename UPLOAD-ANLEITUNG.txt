@@ -1,12 +1,12 @@
-Messstellen-Dokumentation V1
+SK PLT Tools V1.4.0 Clean Rebuild
 
-GitHub aktualisieren:
-1. index.html im Mainordner ersetzen.
-2. Neuen Pfad messstellen-doku/index.html anlegen und die mitgelieferte Datei einfügen.
-3. service-worker.js im Mainordner ersetzen.
-4. Commit changes ausführen.
-5. PC: Strg+F5. iPhone: Seite vollständig schließen und neu öffnen.
+1. GitHub Repository SimonProject1/testingtool öffnen.
+2. Im Branch main den gesamten bisherigen Inhalt löschen.
+3. Inhalt dieser ZIP direkt in den Hauptordner hochladen. Keinen zusätzlichen Oberordner anlegen.
+4. Commit erstellen.
+5. Unter Settings > Pages prüfen: Deploy from a branch, main, / (root).
+6. GitHub Pages normal über /testingtool/ öffnen. Kein URL-Zusatz ist erforderlich.
+7. Browser zweimal aktualisieren und danach neu öffnen.
+8. Auf dem iPhone alte Homescreen-App löschen, Safari öffnen und normal neu zum Home-Bildschirm hinzufügen.
 
-Vorhandene Ordner und Dateien bleiben bestehen.
-Die Messstellenbezeichnung wird als PDF-Dateiname verwendet.
-Pflichtfelder: Messstellenbezeichnung, Datum, Typenschildfoto, Foto der Einbausituation.
+Achtung: Dieser Clean Rebuild ist ein eigenständiger Gesamtstand. Keine alten Patchdateien zurückkopieren.
