@@ -1,0 +1,29 @@
+/* SK PLT Tools Icon System V2 */
+.card .icon,.tool-card .icon{
+  width:54px!important;
+  height:54px!important;
+  min-width:54px!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+  border-radius:15px!important;
+  background:linear-gradient(135deg,#00b7e8 0%,#38d9ca 48%,#89d329 100%)!important;
+  color:#061827!important;
+  box-shadow:none!important;
+}
+.card .icon svg,.tool-card .icon svg{
+  width:34px!important;
+  height:34px!important;
+  display:block!important;
+  overflow:visible!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.35!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+}
+.card .icon svg .solid,.tool-card .icon svg .solid{fill:currentColor!important;stroke:none!important}
+@media(max-width:760px){
+  .card .icon,.tool-card .icon{width:52px!important;height:52px!important;min-width:52px!important}
+  .card .icon svg,.tool-card .icon svg{width:33px!important;height:33px!important}
+}
