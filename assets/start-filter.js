@@ -1,55 +1,17 @@
 (()=>{'use strict';
 const FILTERS=['ALLE','RECHNER','SERVICE','DOKUMENTATION','WISSEN'];
-function isStartPage(){
-  const path=location.pathname.replace(/\/+$/,'');
-  return !/(\/analogsignal|\/pf-rechner|\/pt-rechner|\/einheitenrechner|\/messstellen-doku|\/servicewerte|\/wissensdatenbank)(\/|$)/.test(path);
-}
-function normalize(value){
-  return String(value||'').toLocaleLowerCase('de-DE').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9+]+/g,' ').trim();
-}
-function cards(){return [...document.querySelectorAll('.tools a.card,.start-tools a.tool-card')];}
-function category(card){return (card.querySelector('.sk-card-category')?.textContent||'').trim().toUpperCase();}
-function applyFilter(){
-  const query=normalize(document.getElementById('skToolSearch')?.value||'');
-  const active=document.querySelector('.sk-filter-button.active')?.dataset.filter||'ALLE';
-  let visible=0;
-  cards().forEach(card=>{
-    const haystack=normalize(`${category(card)} ${card.querySelector('h1,h2,h3')?.textContent||''} ${card.querySelector('p')?.textContent||''}`);
-    const matchesCategory=active==='ALLE'||category(card)===active;
-    const matchesText=!query||query.split(/\s+/).every(term=>haystack.includes(term));
-    const show=matchesCategory&&matchesText;
-    card.hidden=!show;
-    card.classList.toggle('sk-filter-hidden',!show);
-    if(show)visible++;
-  });
-  const empty=document.getElementById('skFilterEmpty');
-  if(empty)empty.hidden=visible!==0;
-  const result=document.getElementById('skFilterResult');
-  if(result)result.textContent=`${visible} ${visible===1?'Werkzeug':'Werkzeuge'} angezeigt`;
-}
-function resetFilter(){
-  const search=document.getElementById('skToolSearch');
-  if(search)search.value='';
-  document.querySelectorAll('.sk-filter-button').forEach(button=>button.classList.toggle('active',button.dataset.filter==='ALLE'));
-  applyFilter();
-}
-function init(){
-  if(!isStartPage()||document.getElementById('skToolFilter'))return;
-  const list=document.querySelector('.tools,.start-tools');
-  if(!list)return;
-  const section=document.createElement('section');
-  section.id='skToolFilter';
-  section.className='sk-tool-filter panel';
-  section.innerHTML=`<div class="sk-filter-heading"><div><div class="eyebrow">WERKZEUGE FILTERN</div><h2>Was suchst du?</h2></div><button id="skFilterReset" class="sk-filter-reset" type="button">Zurücksetzen</button></div><label class="sk-filter-search"><span>Werkzeug suchen</span><input id="skToolSearch" type="search" placeholder="z. B. Analog, Pt100, PIN oder Wissen" autocomplete="off"></label><div class="sk-filter-buttons" role="group" aria-label="Werkzeuge nach Kategorie filtern">${FILTERS.map(name=>`<button class="sk-filter-button${name==='ALLE'?' active':''}" type="button" data-filter="${name}">${name[0]+name.slice(1).toLocaleLowerCase('de-DE')}</button>`).join('')}</div><div class="sk-filter-meta"><span id="skFilterResult"></span></div><div id="skFilterEmpty" class="sk-filter-empty" hidden><strong>Keine passenden Werkzeuge gefunden.</strong><span>Ändere den Suchbegriff oder setze den Filter zurück.</span></div>`;
-  list.parentNode.insertBefore(section,list);
-  section.querySelectorAll('.sk-filter-button').forEach(button=>button.addEventListener('click',()=>{
-    section.querySelectorAll('.sk-filter-button').forEach(item=>item.classList.remove('active'));
-    button.classList.add('active');
-    applyFilter();
-  }));
-  document.getElementById('skToolSearch').addEventListener('input',applyFilter);
-  document.getElementById('skFilterReset').addEventListener('click',resetFilter);
-  applyFilter();
-}
+let searchIndex=[];
+function isStartPage(){const p=location.pathname.replace(/\/+$/,'');return !/(\/analogsignal|\/pf-rechner|\/pt-rechner|\/einheitenrechner|\/messstellen-doku|\/servicewerte|\/wissensdatenbank)(\/|$)/.test(p)}
+function base(){const p=location.pathname;return p.endsWith('/')?p:p.slice(0,p.lastIndexOf('/')+1)}
+function norm(v){return String(v||'').toLocaleLowerCase('de-DE').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9+]+/g,' ').trim()}
+function cards(){return [...document.querySelectorAll('.tools a.card,.start-tools a.tool-card')]}
+function category(card){return (card.querySelector('.sk-card-category')?.textContent||'').trim().toUpperCase()}
+function matchIndex(item,query,active){const categoryMatch=active==='ALLE'||active==='WISSEN'&&item.category==='WISSEN';if(!categoryMatch||!query)return false;const haystack=norm([item.type,item.category,item.manufacturer,item.device,item.topic,item.title,item.description,(item.breadcrumb||[]).join(' '),(item.keywords||[]).join(' ')].join(' '));return query.split(/\s+/).every(term=>haystack.includes(term))}
+function renderKnowledge(query,active){const section=document.getElementById('skKnowledgeResults');const list=document.getElementById('skKnowledgeResultList');const count=document.getElementById('skKnowledgeResultCount');if(!section||!list)return 0;const results=searchIndex.filter(item=>matchIndex(item,query,active));list.replaceChildren();results.forEach(item=>{const card=document.createElement('a');card.className='card sk-search-result-card';card.href=new URL(item.url,base()).href;const breadcrumb=(item.breadcrumb||[]).map(escapeText).join('<span>›</span>');card.innerHTML=`<div class="sk-card-category">${escapeText(item.type)}</div><h3>${escapeText(item.title)}</h3><p>${escapeText(item.description)}</p><div class="sk-result-path">${breadcrumb}</div><div class="open">Beitrag öffnen →</div>`;list.append(card)});section.hidden=results.length===0;if(count)count.textContent=`${results.length} ${results.length===1?'Beitrag':'Beiträge'} gefunden`;return results.length}
+function escapeText(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function applyFilter(){const query=norm(document.getElementById('skToolSearch')?.value||'');const active=document.querySelector('.sk-filter-button.active')?.dataset.filter||'ALLE';let tools=0;cards().forEach(card=>{const haystack=norm(`${category(card)} ${card.querySelector('h1,h2,h3')?.textContent||''} ${card.querySelector('p')?.textContent||''}`);const categoryMatch=active==='ALLE'||category(card)===active;const textMatch=!query||query.split(/\s+/).every(term=>haystack.includes(term));const show=categoryMatch&&textMatch;card.hidden=!show;card.classList.toggle('sk-filter-hidden',!show);if(show)tools++});const knowledge=renderKnowledge(query,active);const empty=document.getElementById('skFilterEmpty');if(empty)empty.hidden=tools+knowledge!==0;const result=document.getElementById('skFilterResult');if(result)result.textContent=query?`${tools} ${tools===1?'Werkzeug':'Werkzeuge'} und ${knowledge} ${knowledge===1?'Beitrag':'Beiträge'} angezeigt`:`${tools} ${tools===1?'Werkzeug':'Werkzeuge'} angezeigt`}
+function resetFilter(){const search=document.getElementById('skToolSearch');if(search)search.value='';document.querySelectorAll('.sk-filter-button').forEach(button=>button.classList.toggle('active',button.dataset.filter==='ALLE'));applyFilter()}
+async function loadIndex(){try{const response=await fetch(new URL('assets/search-index.json?v=1.5.2',base()),{cache:'no-store'});if(!response.ok)throw new Error(String(response.status));const data=await response.json();searchIndex=Array.isArray(data)?data:[]}catch(error){console.warn('Der Suchindex konnte nicht geladen werden.',error);searchIndex=[]}}
+async function init(){if(!isStartPage()||document.getElementById('skToolFilter'))return;const list=document.querySelector('.tools,.start-tools');if(!list)return;const section=document.createElement('section');section.id='skToolFilter';section.className='sk-tool-filter panel';section.innerHTML=`<div class="sk-filter-heading"><div><div class="eyebrow">WERKZEUGE UND WISSEN FILTERN</div><h2>Was suchst du?</h2></div><button id="skFilterReset" class="sk-filter-reset" type="button">Zurücksetzen</button></div><label class="sk-filter-search"><span>Werkzeug oder Wissensbeitrag suchen</span><input id="skToolSearch" type="search" placeholder="z. B. Analog, Pt100, PIN, Air Torque, SCO oder SCC" autocomplete="off"></label><div class="sk-filter-buttons" role="group" aria-label="Werkzeuge nach Kategorie filtern">${FILTERS.map(name=>`<button class="sk-filter-button${name==='ALLE'?' active':''}" type="button" data-filter="${name}">${name[0]+name.slice(1).toLocaleLowerCase('de-DE')}</button>`).join('')}</div><div class="sk-filter-meta"><span id="skFilterResult"></span></div><div id="skFilterEmpty" class="sk-filter-empty" hidden><strong>Keine passenden Werkzeuge oder Wissensbeiträge gefunden.</strong><span>Ändere den Suchbegriff oder setze den Filter zurück.</span></div>`;list.parentNode.insertBefore(section,list);const results=document.createElement('section');results.id='skKnowledgeResults';results.className='sk-knowledge-results';results.hidden=true;results.innerHTML='<div class="sk-results-heading"><div><div class="eyebrow">WISSENSBEITRÄGE</div><h2>Passende Unterseiten</h2></div><span id="skKnowledgeResultCount"></span></div><div id="skKnowledgeResultList" class="sk-knowledge-result-list"></div>';list.parentNode.insertBefore(results,list.nextSibling);section.querySelectorAll('.sk-filter-button').forEach(button=>button.addEventListener('click',()=>{section.querySelectorAll('.sk-filter-button').forEach(item=>item.classList.remove('active'));button.classList.add('active');applyFilter()}));document.getElementById('skToolSearch').addEventListener('input',applyFilter);document.getElementById('skFilterReset').addEventListener('click',resetFilter);await loadIndex();applyFilter()}
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init();
 })();

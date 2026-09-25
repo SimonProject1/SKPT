@@ -1,0 +1,15 @@
+[
+  {
+    "id": "air-torque-antrieb-drehrichtung",
+    "type": "WISSENSBEITRAG",
+    "category": "WISSEN",
+    "manufacturer": "Air Torque",
+    "device": "Antrieb",
+    "topic": "Drehrichtung",
+    "title": "Air Torque – Antrieb – Drehrichtung",
+    "description": "Bedeutung der Kennzeichnungen SCO und SCC auf dem Typenschild eines Air-Torque-Antriebs.",
+    "breadcrumb": ["Wissensdatenbank", "Air Torque", "Antrieb", "Drehrichtung"],
+    "keywords": ["AirTorque", "Air Torque", "Antrieb", "Drehrichtung", "SCO", "SCC", "Uhrzeigersinn", "gegen den Uhrzeigersinn", "Typenschild", "Federkraft"],
+    "url": "wissensdatenbank/air-torque-antrieb-drehrichtung/"
+  }
+]
