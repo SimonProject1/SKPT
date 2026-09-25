@@ -2,68 +2,23 @@ const APP_VERSION='1.4.0';
 function $(id){return document.getElementById(id)}
 function num(v){return Number.parseFloat(String(v).replace(',','.'))}
 function de(v,d=3){return Number.isFinite(v)?v.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d}):'–'}
+function projectBase(){const modules=['analogsignal','pf-rechner','pt-rechner','einheitenrechner','messstellen-doku','servicewerte','wissensdatenbank'];const path=location.pathname;const hits=modules.map(name=>path.indexOf('/'+name+'/')).filter(index=>index>=0);return hits.length?path.slice(0,Math.min(...hits)+1):(path.endsWith('/')?path:path.slice(0,path.lastIndexOf('/')+1))}
+function configureLogos(){const base=projectBase();document.querySelectorAll('.topbar .logo').forEach(image=>{image.src=base+'assets/icon-512.png';image.alt='SK PLT Tools Icon'});document.querySelectorAll('.hero > img,.hero-logo img').forEach(image=>{image.src=base+'assets/logo.png';image.alt='SK PLT Tools Hauptlogo'})}
+function signInputs(){document.querySelectorAll('input[type=number]').forEach(input=>{if(input.dataset.s)return;input.dataset.s=1;const wrapper=document.createElement('div');wrapper.className='number';input.parentNode.insertBefore(wrapper,input);wrapper.append(input);const button=document.createElement('button');button.type='button';button.className='sign';button.textContent='±';button.setAttribute('aria-label','Vorzeichen wechseln');button.onclick=()=>{const value=num(input.value);input.value=Number.isFinite(value)?(value===0?0:-value):'-';input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}))};wrapper.append(button)})}
+function support(){const host=document.querySelector('main');if(!host||document.querySelector('.support'))return;const section=document.createElement('section');section.className='panel support';section.innerHTML='<div><b>Fehler gefunden oder eine Idee?</b><div class="muted">Feedback direkt an Simon Kiesler senden.</div></div><button class="primary" id="supportBtn">✉ Support & Feedback</button>';host.append(section);$('supportBtn').onclick=()=>{const name=prompt('Name:')||'',email=prompt('E-Mail-Adresse:')||'',message=prompt('Beschreibung:')||'';if(!name||!email||!message)return;location.href=`mailto:simon.kiesler@bayer.com?subject=${encodeURIComponent('SK PLT Tools '+APP_VERSION+' - Support')}&body=${encodeURIComponent('Name: '+name+'\nE-Mail: '+email+'\nSeite: '+document.title+'\nVersion: '+APP_VERSION+'\n\n'+message)}`}}
 
-function projectBase(){
-  const modules=['analogsignal','pf-rechner','pt-rechner','einheitenrechner','messstellen-doku','servicewerte','wissensdatenbank'];
-  const path=location.pathname;
-  const hits=modules.map(name=>path.indexOf('/'+name+'/')).filter(index=>index>=0);
-  return hits.length?path.slice(0,Math.min(...hits)+1):(path.endsWith('/')?path:path.slice(0,path.lastIndexOf('/')+1));
+const TOOL_ICON_SVG={
+ analog:'<path d="M4 19V5M4 19h16"/><path d="m6.5 16 4.5-4.5 3 1.5 4-5"/><circle cx="11" cy="11.5" r="1.6"/><circle cx="18" cy="8" r="1.6"/>',
+ pf:'<path d="M4 19V5M4 19h16"/><path d="m6.5 16 4-4 3 1.5 4.5-6"/><circle cx="10.5" cy="12" r="1.4"/><path d="M16.5 12v5M19.5 12l-3 2.6 3 2.4"/>',
+ pt:'<path d="M7 14.7V5a3 3 0 0 1 6 0v9.7a5 5 0 1 1-6 0Z"/><path d="M10 7v9"/><path d="M16.5 17.5c0-2.2 1.3-3.5 3-3.5s3 1.3 3 3.5c0 1.7-.8 2.8-1.8 3.5M18.3 21h3.5"/>',
+ documentation:'<path d="M5 3h9l4 4v5M14 3v5h5"/><path d="M5 3v18h7"/><path d="M8 9h5M8 13h3"/><rect x="11" y="13" width="10" height="8" rx="2"/><circle cx="16" cy="17" r="2.2"/><path d="m14 13 .8-1h2.4l.8 1"/>',
+ service:'<circle cx="8" cy="7" r="3"/><path d="m10 9 4 4M13 12l-6.5 6.5L4 20l1.5-2.5L12 11"/><circle cx="18" cy="17" r="3.4"/><path d="M18 11.8v1.8M18 20.4v1.8M12.8 17h1.8M21.4 17h1.8M14.3 13.3l1.3 1.3M20.4 19.4l1.3 1.3M21.7 13.3l-1.3 1.3M15.6 19.4l-1.3 1.3"/>',
+ units:'<path d="M4 8h14M15 5l3 3-3 3M20 16H6M9 13l-3 3 3 3"/>',
+ knowledge:'<path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22Z"/><path d="M21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h3"/><path d="M16 18h2.5l2-2M16 21h4.5"/><circle cx="15" cy="18" r="1"/><circle cx="21" cy="15" r="1"/>'
+};
+const TOOL_ICON_MAP={'analogsignal':'analog','pf-rechner':'pf','pt-rechner':'pt','messstellen-doku':'documentation','servicewerte':'service','einheitenrechner':'units','wissensdatenbank':'knowledge'};
+function activateToolIcons(){
+ const style=document.createElement('style');style.id='sk-tool-icon-style';style.textContent='.tool-card .icon,.card .icon{width:48px!important;height:48px!important;min-width:48px!important;display:grid!important;place-items:center!important;border-radius:14px!important;background:linear-gradient(135deg,#00b7e8 0%,#42d8bf 48%,#89d329 100%)!important;color:#061827!important;box-shadow:none!important}.tool-card .icon svg,.card .icon svg{width:25px!important;height:25px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:2.2!important;stroke-linecap:round!important;stroke-linejoin:round!important}';if(!document.getElementById(style.id))document.head.append(style);
+ document.querySelectorAll('a.tool-card,a.card').forEach(card=>{const href=(card.getAttribute('href')||'').toLowerCase();const folder=Object.keys(TOOL_ICON_MAP).find(name=>href.includes(name));const icon=card.querySelector('.icon');if(!folder||!icon)return;const key=TOOL_ICON_MAP[folder];icon.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${TOOL_ICON_SVG[key]}</svg>`;icon.dataset.skIcon=key});
 }
-
-function configureLogos(){
-  const base=projectBase();
-  document.querySelectorAll('.topbar .logo').forEach(image=>{
-    image.src=base+'assets/icon-512.png';
-    image.alt='SK PLT Tools Icon';
-  });
-  document.querySelectorAll('.hero > img, .hero-logo img').forEach(image=>{
-    image.src=base+'assets/logo.png';
-    image.alt='SK PLT Tools Hauptlogo';
-  });
-}
-
-function signInputs(){
-  document.querySelectorAll('input[type=number]').forEach(input=>{
-    if(input.dataset.s)return;
-    input.dataset.s=1;
-    const wrapper=document.createElement('div');
-    wrapper.className='number';
-    input.parentNode.insertBefore(wrapper,input);
-    wrapper.append(input);
-    const button=document.createElement('button');
-    button.type='button';
-    button.className='sign';
-    button.textContent='±';
-    button.setAttribute('aria-label','Vorzeichen wechseln');
-    button.onclick=()=>{
-      const value=num(input.value);
-      input.value=Number.isFinite(value)?(value===0?0:-value):'-';
-      input.dispatchEvent(new Event('input',{bubbles:true}));
-      input.dispatchEvent(new Event('change',{bubbles:true}));
-    };
-    wrapper.append(button);
-  });
-}
-
-function support(){
-  const host=document.querySelector('main');
-  if(!host||document.querySelector('.support'))return;
-  const section=document.createElement('section');
-  section.className='panel support';
-  section.innerHTML='<div><b>Fehler gefunden oder eine Idee?</b><div class="muted">Feedback direkt an Simon Kiesler senden.</div></div><button class="primary" id="supportBtn">✉ Support & Feedback</button>';
-  host.append(section);
-  $('supportBtn').onclick=()=>{
-    const name=prompt('Name:')||'';
-    const email=prompt('E-Mail-Adresse:')||'';
-    const message=prompt('Beschreibung:')||'';
-    if(!name||!email||!message)return;
-    location.href=`mailto:simon.kiesler@bayer.com?subject=${encodeURIComponent('SK PLT Tools '+APP_VERSION+' - Support')}&body=${encodeURIComponent('Name: '+name+'\nE-Mail: '+email+'\nSeite: '+document.title+'\nVersion: '+APP_VERSION+'\n\n'+message)}`;
-  };
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  configureLogos();
-  signInputs();
-  support();
-  if('serviceWorker' in navigator)navigator.serviceWorker.register(projectBase()+'service-worker.js');
-});
+document.addEventListener('DOMContentLoaded',()=>{configureLogos();activateToolIcons();signInputs();support();if('serviceWorker' in navigator)navigator.serviceWorker.register(projectBase()+'service-worker.js')});
