@@ -1,0 +1,26 @@
+.tool-card .icon,.card .icon{
+  width:48px!important;
+  height:48px!important;
+  min-width:48px!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:14px!important;
+  background:linear-gradient(135deg,#00b7e8 0%,#42d8bf 48%,#89d329 100%)!important;
+  color:#061827!important;
+  box-shadow:none!important;
+}
+.tool-card .icon svg,.card .icon svg{
+  width:25px!important;
+  height:25px!important;
+  display:block!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.2!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  vector-effect:non-scaling-stroke;
+}
+@media(max-width:760px){
+  .tool-card .icon,.card .icon{width:48px!important;height:48px!important}
+  .tool-card .icon svg,.card .icon svg{width:25px!important;height:25px!important}
+}
