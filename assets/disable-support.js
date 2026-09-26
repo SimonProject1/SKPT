@@ -1,13 +1,1 @@
-(()=>{'use strict';
-function removeSupport(){
-  document.querySelectorAll('.support,#supportBtn,[data-support],a[href^="mailto:"]').forEach(element=>{
-    const text=(element.textContent||'').toLocaleLowerCase('de-DE');
-    const href=(element.getAttribute?.('href')||'').toLocaleLowerCase('de-DE');
-    if(element.classList?.contains('support')||element.id==='supportBtn'||text.includes('support')||text.includes('feedback')||href.includes('simon.kiesler')){
-      (element.closest?.('.support')||element).remove();
-    }
-  });
-}
-function run(){removeSupport();setTimeout(removeSupport,100);setTimeout(removeSupport,500)}
-document.readyState==='loading'?document.addEventListener('DOMContentLoaded',run,{once:true}):run();
-})();
+(()=>{'use strict';function remove(){document.querySelectorAll('.support,#supportBtn,[data-support],a[href^="mailto:"]').forEach(el=>{const t=(el.textContent||'').toLowerCase(),h=(el.getAttribute?.('href')||'').toLowerCase();if(el.classList?.contains('support')||el.id==='supportBtn'||t.includes('support')||t.includes('feedback')||h.includes('simon.kiesler'))(el.closest?.('.support')||el).remove()})}function run(){remove();setTimeout(remove,100);setTimeout(remove,500)}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',run,{once:true}):run()})();
