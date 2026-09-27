@@ -1,8 +1,1 @@
-/* SK PLT Tools V1.9.8.5 - Version unter Logo und Footer auf jeder Seite */
-.sk-logo-version-stack{display:flex!important;flex:0 0 auto;flex-direction:column;align-items:center;justify-content:center;gap:5px}
-.sk-logo-version-stack .sk-header-logo,.sk-logo-version-stack img{display:block;margin:0!important}
-.sk-logo-version{color:#89d329;font-size:11px;font-weight:900;line-height:1;letter-spacing:.35px;white-space:nowrap;text-align:center}
-.sk-header-normalized>.sk-header-inner>.version,.sk-header-normalized>.sk-header-inner>.badge,.sk-header-normalized>.sk-header-inner>.header-meta{display:none!important}
-footer.footer,footer.sk-footer{box-sizing:border-box;width:min(1100px,calc(100% - 34px));margin:30px auto 0;padding:18px 0 24px;color:#9fb8c5;text-align:center;font-size:13px;line-height:1.4}
-footer.footer .stb-version,footer.sk-footer .stb-version{color:inherit}
-@media(max-width:760px){.sk-logo-version{font-size:9px}footer.footer,footer.sk-footer{width:min(100% - 22px,1100px);padding-bottom:22px;font-size:12px}}
+/* Compatibility shim; styles are consolidated in design.css for 1.9.9.1. */

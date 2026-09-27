@@ -1,5 +1,1 @@
-/* SK PLT Tools V1.9.4 - kompakte, vollflaechig anklickbare Kacheln */
-.tools>a.card,.start-tools>a.tool-card{min-height:0!important;height:auto!important;padding-bottom:24px!important}
-.tools>a.card .open,.start-tools>a.tool-card .open,.tools>a.card .card-action,.start-tools>a.tool-card .tool-action{display:none!important}
-.tools>a.card p,.start-tools>a.tool-card p{margin-bottom:0!important}
-@media(max-width:760px){.tools>a.card,.start-tools>a.tool-card{padding-bottom:20px!important}}
+/* Compatibility shim; styles are consolidated in design.css for 1.9.9.1. */

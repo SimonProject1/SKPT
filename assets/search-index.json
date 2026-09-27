@@ -1,4 +1,39 @@
 [
-  {"type":"Wissensbeitrag","manufacturer":"Air Torque","device":"Antrieb","topic":"Drehrichtung","description":"Bedeutung der Kennzeichnungen SCO und SCC.","keywords":["AirTorque","Air Torque","Antrieb","Drehrichtung","SCO","SCC","Uhrzeigersinn","Federkraft"],"url":"wissensdatenbank/air-torque-antrieb-drehrichtung/"},
-  {"type":"Wissensbeitrag","manufacturer":"Siemens","device":"Sitrans P320","topic":"SIL-Verriegelung","description":"SIL-Funktion mit SIMATIC PDM aktivieren; Schreibschutz und Initial-PIN beachten.","keywords":["Siemens","Sitrans","P320","SIL","Verriegelung","SIMATIC PDM","Schreibschutz","2457","PIN"],"url":"wissensdatenbank/siemens-sitrans-p320-sil-verriegelung/"}
+  {
+    "type": "Wissensbeitrag",
+    "manufacturer": "Air Torque",
+    "device": "Antrieb",
+    "topic": "Drehrichtung",
+    "description": "Bedeutung der Kennzeichnungen SCO und SCC.",
+    "keywords": [
+      "AirTorque",
+      "Air Torque",
+      "Antrieb",
+      "Drehrichtung",
+      "SCO",
+      "SCC",
+      "Uhrzeigersinn",
+      "Federkraft"
+    ],
+    "url": "wissensdatenbank/air-torque-antrieb-drehrichtung/"
+  },
+  {
+    "type": "Wissensbeitrag",
+    "manufacturer": "Siemens",
+    "device": "Sitrans P320",
+    "topic": "SIL-Verriegelung",
+    "description": "SIL-Funktion mit SIMATIC PDM aktivieren; Schreibschutz und Initial-PIN beachten.",
+    "keywords": [
+      "Siemens",
+      "Sitrans",
+      "P320",
+      "SIL",
+      "Verriegelung",
+      "SIMATIC PDM",
+      "Schreibschutz",
+      "2457",
+      "PIN"
+    ],
+    "url": "wissensdatenbank/siemens-sitrans-p320-sil-verriegelung/"
+  }
 ]
