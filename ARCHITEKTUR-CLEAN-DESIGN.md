@@ -1,8 +1,8 @@
-# Clean-Design-Architektur 2.0.1.0
+# Clean-Design-Architektur 2.0.1.1
 
 ## Unveränderte Grundlage
 
-Version 2.0.1.0 baut auf dem Clean-Design-Safepoint 2.0.0.0 auf. Dessen Grundprinzipien bleiben unverändert:
+Version 2.0.1.1 baut auf Version 2.0.1.0 und dem Clean-Design-Safepoint 2.0.0.0 auf. Die Grundprinzipien bleiben unverändert:
 
 - finale Headerstruktur direkt in jeder HTML-Datei
 - Version direkt unter dem Logo in jeder HTML-Datei
@@ -13,18 +13,26 @@ Version 2.0.1.0 baut auf dem Clean-Design-Safepoint 2.0.0.0 auf. Dessen Grundpri
 - Service Worker ohne Response-Rewriting; nur Precache, Network-first für Navigation und Cache-Fallback
 - alte Patch-Dateinamen ausschließlich als wirkungslose No-op-Kompatibilitätsdateien
 
-## Erweiterung in 2.0.1.0
+## Favoritenkorrektur in 2.0.1.1
 
-Das Werkstoff-Nachschlagewerk ist als reguläre Wissensseite ergänzt. Es verändert weder Shell noch Renderpfad:
+Die Korrektur verwendet ausschließlich das bestehende Favoritensystem:
+
+- Alle drei Links im Raster `#knowledgeGrid` sind als `knowledge-entry tool-card` gekennzeichnet.
+- `assets/favorites.js` bleibt die einzige Favoritenlogik und verwendet unverändert `skPltToolsFavoritesV2` im Local Storage.
+- Favoriten werden weiterhin zentral im linken Drawer gerendert und sind dadurch auf allen Seiten verfügbar.
+- `preventDefault()` und `stopPropagation()` gelten nur für den Stern-Button; die umgebende Kachel bleibt ein normaler Link.
+- Es wurden weder zusätzlicher Speicher noch parallele Favoritenlogik, Laufzeit-Patches oder Service-Worker-Umschreibungen eingeführt.
+
+## Werkstoff-Nachschlagewerk
+
+Das Werkstoff-Nachschlagewerk bleibt als reguläre Wissensseite integriert:
 
 - statisches Seitenziel `wissensdatenbank/werkstoff-nachschlagewerk/index.html`
 - Darstellung in `assets/materials.css`
 - Interaktion in `assets/materials.js`
 - zentrale Fachdaten, Filtergruppen, Quellen und Vergleiche in `assets/materials.json`
-- Einbindung über bestehende Startseitensuche, Wissenskacheln, Favoritenlogik und Navigationsbaum
-- Aufnahme der neuen statischen Ressourcen in den vorhandenen Service-Worker-Precache
-
-Die Daten bleiben vom Layout und von der Suchlogik getrennt. Neue Werkstoffe können dadurch in der JSON-Datei ergänzt werden, ohne die Seitenstruktur umzubauen.
+- Einbindung über Startseitensuche, Wissenskacheln, Favoritenlogik und Navigationsbaum
+- statische Ressourcen im vorhandenen Service-Worker-Precache
 
 ## Sicherheitsprinzip
 

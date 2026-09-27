@@ -47,4 +47,16 @@ runInline('pt-rechner/index.html','function r(t,r0)',{
   assertEqual(ids('316L','cast-stainless'),'1-4409','Werkstofffilter 316L Stahlguss');
   assertEqual(ids('Alloy 59'),'2-4605','Werkstoffsuche Alloy 59');
 }
-console.log('OK: Rechner- und Werkstoff-Smoke-Tests abgeschlossen.');
+{
+  const html=fs.readFileSync(path.join(ROOT,'wissensdatenbank/index.html'),'utf8');
+  const tiles=[...html.matchAll(/<a class="([^"]*\bknowledge-entry\b[^"]*)"[^>]*href="([^"]+)"/g)].map(match=>({classes:match[1].split(/\s+/),href:match[2]}));
+  assertEqual(tiles.length,3,'Wissensdatenbank Anzahl Wissenskacheln');
+  const expected=['air-torque-antrieb-drehrichtung/','siemens-sitrans-p320-sil-verriegelung/','werkstoff-nachschlagewerk/'];
+  assertEqual(tiles.map(tile=>tile.href).sort().join(','),expected.join(','),'Wissensdatenbank erwartete Kachelziele');
+  assertEqual(tiles.every(tile=>tile.classes.includes('tool-card')),true,'Wissensdatenbank alle Kacheln favoritenfähig');
+  const favorites=fs.readFileSync(path.join(ROOT,'assets/favorites.js'),'utf8');
+  assertEqual(favorites.includes("const KEY='skPltToolsFavoritesV2'"),true,'Favoriten bestehender Speicherschlüssel');
+  assertEqual(favorites.includes('localStorage.setItem(KEY'),true,'Favoriten persistente Speicherung');
+  assertEqual(favorites.includes('event.preventDefault()')&&favorites.includes('event.stopPropagation()'),true,'Favoriten Sternklick ohne Kachelnavigation');
+}
+console.log('OK: Rechner-, Werkstoff- und Wissenskachel-Favoriten-Smoke-Tests abgeschlossen.');

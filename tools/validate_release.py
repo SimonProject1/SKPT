@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Static release validation for SK PLT Tools 2.0.1.0."""
+"""Static release validation for SK PLT Tools 2.0.1.1."""
 from pathlib import Path
 from bs4 import BeautifulSoup
 import hashlib, json, re, subprocess, sys
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='2.0.1.0'
+VERSION='2.0.1.1'
 EXPECTED_PAGES={
  'index.html','analogsignal/index.html','einheitenrechner/index.html','messstellen-doku/index.html',
  'pf-rechner/index.html','pt-rechner/index.html','servicewerte/index.html',
@@ -64,9 +64,19 @@ if start.select('a[href*="servicewerte"]'): errors.append('Startseite: entfernte
 if not start.select_one('#skToolFilter #skToolSort'): errors.append('Startseite: Filter/Sortierung nicht statisch vorhanden')
 
 knowledge=BeautifulSoup((ROOT/'wissensdatenbank/index.html').read_text(encoding='utf-8'),'html.parser')
-material_tile=knowledge.select_one('a.knowledge-entry[href="werkstoff-nachschlagewerk/"]')
-if not material_tile: errors.append('Wissensdatenbank: Werkstoff-Kachel fehlt')
-elif 'tool-card' not in material_tile.get('class',[]): errors.append('Wissensdatenbank: Werkstoff-Kachel ist nicht in Favoriten integriert')
+knowledge_tiles=knowledge.select('#knowledgeGrid > a.knowledge-entry')
+expected_knowledge_hrefs={
+    'werkstoff-nachschlagewerk/',
+    'air-torque-antrieb-drehrichtung/',
+    'siemens-sitrans-p320-sil-verriegelung/'
+}
+actual_knowledge_hrefs={tile.get('href') for tile in knowledge_tiles}
+if actual_knowledge_hrefs!=expected_knowledge_hrefs: errors.append(f'Wissensdatenbank: Wissenskacheln abweichend: {sorted(actual_knowledge_hrefs)}')
+for tile in knowledge_tiles:
+    if 'tool-card' not in tile.get('class',[]): errors.append(f'Wissensdatenbank: Kachel nicht in Favoriten integriert: {tile.get("href","?")}')
+favorites=(ROOT/'assets/favorites.js').read_text(encoding='utf-8')
+for required in ("const KEY='skPltToolsFavoritesV2'",'localStorage.getItem(KEY)','localStorage.setItem(KEY','event.preventDefault()','event.stopPropagation()','render()'):
+    if required not in favorites: errors.append(f'Favoritensystem: erforderliche Persistenz-/Klicklogik fehlt: {required}')
 
 material_page=BeautifulSoup((ROOT/'wissensdatenbank/werkstoff-nachschlagewerk/index.html').read_text(encoding='utf-8'),'html.parser')
 for selector in ('#materialSearch','#materialGroupFilters','#materialResults','#materialCompareSelect','#materialComparison'):
@@ -116,6 +126,7 @@ sw=(ROOT/'service-worker.js').read_text(encoding='utf-8')
 for forbidden in ('enhanceHtml','enhanceJs','.replace(\'</head>\'','.replace(\'</body>\''):
     if forbidden in sw: errors.append(f'Service Worker enthält verbotene Laufzeit-Patchlogik: {forbidden}')
 if f"const RELEASE='{VERSION}'" not in sw: errors.append('Service Worker verwendet falsche Version')
+if "const CACHE=`sk-plt-tools-v${RELEASE}-clean`" not in sw: errors.append('Service Worker verwendet nicht den vorgesehenen versionsabhängigen Cache-Namen')
 for required in ('./assets/materials.json','./assets/materials.js','./assets/materials.css','./wissensdatenbank/werkstoff-nachschlagewerk/index.html'):
     if required not in sw: errors.append(f'Service Worker: Precache-Eintrag fehlt: {required}')
 
@@ -132,4 +143,4 @@ if errors:
     print('FEHLER')
     for error in errors: print('-',error)
     sys.exit(1)
-print(f'OK: {len(pages)} Seiten, 8 Startseitenkacheln, 10 Werkstoffe, Integrationen, Vorlagen-Hashes, lokale Referenzen und JavaScript geprüft.')
+print(f'OK: {len(pages)} Seiten, 8 Startseitenkacheln, 3 favoritenfähige Wissenskacheln, 10 Werkstoffe, Integrationen, Vorlagen-Hashes, lokale Referenzen und JavaScript geprüft.')

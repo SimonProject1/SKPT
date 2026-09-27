@@ -1,4 +1,4 @@
-# Testcheckliste und Abnahme – SK PLT Tools 2.0.1.0
+# Testcheckliste und Abnahme – SK PLT Tools 2.0.1.1
 
 ## Automatisierte Prüfung
 
@@ -13,15 +13,18 @@ Die automatisierte Prüfung kontrolliert unter anderem:
 
 - 13 erwartete HTML-Seiten
 - genau einen statischen Header und Footer je Seite
-- Version 2.0.1.0 in HTML, Skripten, Manifest und Service Worker
+- Version 2.0.1.1 in HTML, Skripten, Manifest und Service Worker
 - acht unveränderte Startseiten-Werkzeugkacheln
+- genau drei erwartete Wissenskacheln
+- Favoritenintegration (`tool-card`) bei Werkstoff-Nachschlagewerk, Air Torque Antrieb und Siemens Sitrans P320
+- vorhandenen Local-Storage-Schlüssel sowie Klickschutz- und Renderlogik des bestehenden Favoritensystems
 - vollständige lokale Referenzen und JavaScript-Syntax
 - zehn Werkstoffdatensätze mit Pflichtfeldern, Quellen und gültigen Gruppen
 - Suchtreffer `14404` → `1.4404`
-- Mehrfachtreffer `316L` → mindestens `1.4404`, `1.4409` und `1.4435`
+- Mehrfachtreffer `316L` → `1.4404`, `1.4409` und `1.4435`
 - Gruppenfilter `316L` + Stahlguss → `1.4409`
 - Vergleiche `316 gegen 316L` und `1.4404 gegen 1.4408`
-- Offline-Precache der neuen Werkstoffseite und zentralen Datendatei
+- Offline-Precache der Werkstoffseite und zentralen Datendatei
 - unveränderte Hashes der drei Vorlagendateien unter `wissensdatenbank/vorlagen/`
 - bestehende Rechner-Sollwerte
 
@@ -31,24 +34,28 @@ Die automatisierte Prüfung kontrolliert unter anderem:
 |---:|---|---|:---:|:---:|
 | 1 | Startseite direkt öffnen | Finales Clean Design ohne sichtbaren Umbau | ☐ | ☐ |
 | 2 | Unterseite öffnen und „Startseite“ wählen | Kein altes Layout, Logo oder Versionsplatzhalter | ☐ | ☐ |
-| 3 | Seite hart neu laden | Version 2.0.1.0 unter Logo und im Footer | ☐ | ☐ |
-| 4 | Favorit setzen/entfernen | Sternstatus und Zähler bleiben korrekt | ☐ | ☐ |
-| 5 | Navigationsbaum öffnen | „Werkstoff-Nachschlagewerk“ unter Wissensdatenbank vorhanden und erreichbar | ☐ | ☐ |
-| 6 | Wissensdatenbank öffnen | Neue Wissenskachel sichtbar, suchbar und als Favorit speicherbar | ☐ | ☐ |
-| 7 | Startseitensuche `316L` | Wissensbeitrag erscheint; Öffnen übernimmt `316L` in die Werkstoffsuche | ☐ | ☐ |
-| 8 | Werkstoffsuche `1.4404` und `14404` | Beide Schreibweisen liefern 1.4404 | ☐ | ☐ |
-| 9 | Werkstoffsuche `316L` | Mehrere Treffer: 1.4404, 1.4409/CF3M und 1.4435 | ☐ | ☐ |
-| 10 | Werkstoffsuche `CF8M` | 1.4408/GX5CrNiMo19-11-2; Stahlguss klar markiert | ☐ | ☐ |
-| 11 | Werkstoffsuche `Alloy 59` | 2.4605/N06059 | ☐ | ☐ |
-| 12 | Gruppenfilter | Austenitischer Edelstahl, Stahlguss und Nickelbasislegierung filtern korrekt | ☐ | ☐ |
-| 13 | Ergebnis-Karten | Nummer, Kurzname, internationale Bezeichnungen, UNS, Gruppe, Erzeugnisform, Erklärung, Verwandte, Abgrenzung, Quellen und Sicherheitshinweis vorhanden | ☐ | ☐ |
-| 14 | Vergleich `316 gegen 316L` | 1.4401 und 1.4404 mit Kernunterschieden gegenübergestellt | ☐ | ☐ |
-| 15 | Vergleich `1.4404 gegen 1.4408` | Walz-/Knetwerkstoff gegenüber Stahlguss klar abgegrenzt | ☐ | ☐ |
-| 16 | Externe Quellenlinks | Öffnen in neuem Tab; keine Navigation der Anwendung geht verloren | ☐ | ☐ |
-| 17 | Offline-Test nach Online-Aufruf | Startseite, Werkstoffseite, CSS/JS/JSON und bestehende Kernseiten laden aus Cache | ☐ | ☐ |
-| 18 | PDF-Vorlage herunterladen | Datei funktioniert und ist gegenüber 2.0.0.0 unverändert | ☐ | ☐ |
-| 19 | Responsive Darstellung | Suche, Filter, Karten und Vergleich auf schmalem Bildschirm vollständig bedienbar | ☐ | ☐ |
-| 20 | Bestehende Rechner | Alle bisherigen Sollwerte unverändert | ☐ | ☐ |
+| 3 | Seite hart neu laden | Version 2.0.1.1 unter Logo und im Footer | ☐ | ☐ |
+| 4 | Wissensdatenbank öffnen | Drei Wissenskacheln sichtbar; jede zeigt einen Favoritenstern | ☐ | ☐ |
+| 5 | Werkstoff-Nachschlagewerk als Favorit setzen | Stern aktiv; Eintrag im linken Favoritenmenü | ☐ | ☐ |
+| 6 | Air Torque Antrieb als Favorit setzen | Stern aktiv; Eintrag im linken Favoritenmenü | ☐ | ☐ |
+| 7 | Siemens Sitrans P320 als Favorit setzen | Stern aktiv; Eintrag im linken Favoritenmenü | ☐ | ☐ |
+| 8 | Mit gesetzten Favoriten Seite wechseln und neu laden | Alle Favoriten und Zähler bleiben erhalten | ☐ | ☐ |
+| 9 | Favorit im linken Menü öffnen | Richtiger Wissensbeitrag öffnet | ☐ | ☐ |
+| 10 | Stern bei jeder Wissenskachel erneut wählen | Nur Favorit wird entfernt; keine Seitennavigation | ☐ | ☐ |
+| 11 | Jede Wissenskachel außerhalb des Sterns wählen | Zugehörige Wissensseite öffnet unverändert | ☐ | ☐ |
+| 12 | Wissenssuche verwenden | Filterung blendet Kacheln ein/aus; Sterne bleiben an den sichtbaren Kacheln korrekt | ☐ | ☐ |
+| 13 | Navigationsbaum öffnen | Alle Wissensseiten vorhanden und erreichbar | ☐ | ☐ |
+| 14 | Startseitensuche `316L` | Wissensbeitrag erscheint; Öffnen übernimmt `316L` in die Werkstoffsuche | ☐ | ☐ |
+| 15 | Werkstoffsuche `1.4404` und `14404` | Beide Schreibweisen liefern 1.4404 | ☐ | ☐ |
+| 16 | Werkstoffsuche `316L` | Mehrere Treffer: 1.4404, 1.4409/CF3M und 1.4435 | ☐ | ☐ |
+| 17 | Werkstoffsuche `CF8M` | 1.4408/GX5CrNiMo19-11-2; Stahlguss klar markiert | ☐ | ☐ |
+| 18 | Werkstoffsuche `Alloy 59` | 2.4605/N06059 | ☐ | ☐ |
+| 19 | Gruppenfilter und Vergleiche | Filter sowie beide Direktvergleiche funktionieren | ☐ | ☐ |
+| 20 | Externe Quellenlinks | Öffnen in neuem Tab; Anwendungsnavigation bleibt erhalten | ☐ | ☐ |
+| 21 | Offline-Test nach Online-Aufruf | Startseite, Wissensseiten, CSS/JS/JSON und bestehende Kernseiten laden aus Cache | ☐ | ☐ |
+| 22 | PDF-Vorlage herunterladen | Datei funktioniert und ist gegenüber 2.0.1.0 bytegenau unverändert | ☐ | ☐ |
+| 23 | Responsive Darstellung | Suche, Filter, Karten, Sterne, Favoritenmenü und Vergleiche vollständig bedienbar | ☐ | ☐ |
+| 24 | Bestehende Rechner | Alle bisherigen Sollwerte unverändert | ☐ | ☐ |
 
 ## Rechner-Sollwerte
 
