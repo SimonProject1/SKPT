@@ -2,82 +2,66 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#061827">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="SK PLT Tools">
-  <link rel="manifest" href="../manifest.webmanifest">
-  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-  <link rel="icon" href="../assets/favicon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Wissensdatenbank für Feldgeräte und praktische PLT-Hinweise">
+  <title>Wissensdatenbank | SK PLT Tools</title>
   <link rel="stylesheet" href="../assets/styles.css">
-  <link rel="stylesheet" href="../assets/logo-layout.css">
-  <link rel="stylesheet" href="../assets/airttorque-wissen.css">
-  <title>Wissensdatenbank · SK PLT Tools</title>
+  <style>
+    .knowledge-overview{width:min(1100px,calc(100% - 34px));margin:0 auto;padding:44px 0 72px}
+    .knowledge-hero{margin-bottom:36px}.knowledge-kicker{color:#89d329;font-size:12px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase}.knowledge-hero h1{margin:14px 0 16px;color:#f7fbff;font-size:clamp(44px,7vw,76px);line-height:1}.knowledge-hero p{color:#d3e0e7;font-size:20px}
+    .knowledge-panel{padding:30px;border:1px solid #24485d;border-radius:24px;background:linear-gradient(145deg,#071d2d,#082536)}
+    .proposal-card{display:block;padding:30px;border:1px solid #24485d;border-radius:20px;background:#0a2639;color:#f7fbff;text-decoration:none;margin-bottom:28px}.proposal-card:hover{border-color:#00b7e8}.proposal-card h2{margin:20px 0 14px;font-size:30px}.proposal-card p{color:#b9ced8;font-size:18px;line-height:1.5}
+    .knowledge-search-label{display:block;margin-bottom:8px;color:#d7e4ea;font-weight:800}.knowledge-search{box-sizing:border-box;width:100%;padding:17px 18px;border:1px solid #2a5368;border-radius:14px;background:#041724;color:#fff;font-size:18px;outline:none}.knowledge-search:focus{border-color:#00b7e8}
+    .knowledge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:24px}.knowledge-entry{position:relative;display:block;min-height:190px;padding:30px;border:1px solid #24485d;border-radius:20px;background:#0a2639;color:#f7fbff;text-decoration:none}.knowledge-entry:hover{border-color:#00b7e8;transform:translateY(-2px)}.knowledge-entry h2{margin:20px 0 14px;font-size:32px}.knowledge-entry p{margin:0;color:#b9ced8;font-size:18px;line-height:1.5}.sk-card-category{color:#89d329;font-size:12px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase}.knowledge-empty{display:none;margin-top:20px;padding:20px;border:1px solid #24485d;border-radius:14px;color:#b9ced8}.knowledge-empty.show{display:block}
+    @media(max-width:760px){.knowledge-overview{width:min(100% - 22px,1100px);padding-top:26px}.knowledge-panel{padding:18px}.knowledge-grid{grid-template-columns:1fr}.proposal-card,.knowledge-entry{padding:23px}.knowledge-entry{min-height:0}}
+  </style>
 </head>
-<body>
-  <div class="shell">
-    <header class="topbar">
-      <img class="logo" src="../assets/icon-512.png" alt="SK PLT Tools Logo">
-      <div class="brand">SK PLT Tools<small>WISSENSDATENBANK</small></div>
-      <div class="version">Version 1.4.3</div>
-      <a class="home" href="../">← Startseite</a>
-    </header>
+<body data-sk-module="Wissensdatenbank">
+  <main class="knowledge-overview">
+    <section class="knowledge-hero">
+      <div class="knowledge-kicker">GERÄTEWISSEN</div>
+      <h1>Wissensdatenbank</h1>
+      <p>Anleitungen und Praxistipps zu Feldgeräten.</p>
+    </section>
 
-    <main>
-      <section class="page-title">
-        <div class="eyebrow">GERÄTEWISSEN</div>
-        <h1>Wissensdatenbank</h1>
-        <p>Anleitungen und Praxistipps zu Feldgeräten.</p>
-      </section>
+    <section class="knowledge-panel">
+      <a class="proposal-card" href="vorlagen/Wissensdatenbank_Beitragsvorlage.pdf" download>
+        <div class="sk-card-category">WISSEN</div>
+        <h2>Neuen Wissensbeitrag vorschlagen</h2>
+        <p>Editierbare PDF herunterladen, direkt ausfüllen und zusammen mit den Anhängen an Simon Kiesler senden.</p>
+      </a>
 
-      <section class="panel">
-        <a class="card" href="vorlagen/Wissensdatenbank_Beitragsvorlage.docx" download>
-          <div class="sk-card-category">MITMACHEN</div>
-          <h2>Neuen Wissensbeitrag vorschlagen</h2>
-          <p>Word-Vorlage herunterladen, ausfüllen und an Simon Kiesler senden.</p>
-          <div class="open">Vorlage herunterladen ↓</div>
+      <label class="knowledge-search-label" for="knowledgeSearch">Wissensbeiträge durchsuchen</label>
+      <input id="knowledgeSearch" class="knowledge-search" type="search" placeholder="Hersteller, Gerät oder Thema eingeben" autocomplete="off">
+
+      <div id="knowledgeGrid" class="knowledge-grid">
+        <a class="knowledge-entry" href="air-torque-antrieb-drehrichtung/" data-search="Air Torque Airtorque Antrieb Drehrichtung SCO SCC Uhrzeigersinn Federkraft">
+          <div class="sk-card-category">AIR TORQUE</div>
+          <h2>Antrieb</h2>
+          <p>Drehrichtung: Bedeutung von SCO und SCC</p>
         </a>
 
-        <label style="display:block;margin-top:20px;">
-          <span>Wissensbeiträge durchsuchen</span>
-          <input id="knowledgeSearch" type="search" placeholder="Hersteller, Gerät oder Thema eingeben">
-        </label>
-
-        <div class="device-grid" id="knowledgeGrid">
-          <a class="card knowledge-entry" href="air-torque-antrieb-drehrichtung/" data-search="air torque airtorque antrieb drehrichtung sco scc uhrzeigersinn gegen uhrzeigersinn">
-            <div class="sk-card-category">AIR TORQUE</div>
-            <h2>Antrieb</h2>
-            <p>Drehrichtung: Bedeutung von SCO und SCC</p>
-            <div class="open">Öffnen →</div>
-          </a>
-        </div>
-
-        <p id="knowledgeEmpty" class="muted" hidden style="margin-top:18px;">Keine passenden Wissensbeiträge gefunden.</p>
-      </section>
-    </main>
-
-    <footer class="footer">SK PLT Tools · Version 1.4.3 · Entwickelt von Simon Kiesler</footer>
-  </div>
-
-  <script src="../assets/app.js"></script>
+        <a class="knowledge-entry" href="siemens-sitrans-p320-sil-verriegelung/" data-search="Siemens Sitrans P320 SIL Verriegelung SIMATIC PDM Schreibschutz 2457 PIN">
+          <div class="sk-card-category">SIEMENS</div>
+          <h2>Sitrans P320</h2>
+          <p>SIL-Verriegelung mit SIMATIC PDM, Schreibschutz und Initial-PIN 2457.</p>
+        </a>
+      </div>
+      <div id="knowledgeEmpty" class="knowledge-empty">Keine passenden Wissensbeiträge gefunden.</div>
+    </section>
+  </main>
   <script>
-    (() => {
-      const search=document.getElementById('knowledgeSearch');
-      const entries=[...document.querySelectorAll('.knowledge-entry')];
+    (()=>{'use strict';
+      const input=document.getElementById('knowledgeSearch');
+      const cards=[...document.querySelectorAll('#knowledgeGrid .knowledge-entry')];
       const empty=document.getElementById('knowledgeEmpty');
-      const normalize=value=>value.toLocaleLowerCase('de-DE').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9+]+/g,' ').trim();
       function filter(){
-        const query=normalize(search.value);
-        let visible=0;
-        entries.forEach(entry=>{
-          const content=normalize(`${entry.dataset.search||''} ${entry.textContent}`);
-          const matches=!query||query.split(/\s+/).every(term=>content.includes(term));
-          entry.hidden=!matches;
-          if(matches)visible+=1;
-        });
-        empty.hidden=visible!==0;
+        const q=input.value.trim().toLocaleLowerCase('de-DE');let visible=0;
+        cards.forEach(card=>{const match=!q||(card.dataset.search+' '+card.textContent).toLocaleLowerCase('de-DE').includes(q);card.hidden=!match;if(match)visible++});
+        empty.classList.toggle('show',visible===0);
       }
-      search.addEventListener('input',filter);
+      input.addEventListener('input',filter);
+      document.dispatchEvent(new CustomEvent('sk:cards-updated',{detail:{source:'knowledge-index',version:'1.9.8.2'}}));
     })();
   </script>
 </body>
