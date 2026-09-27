@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Static release validation for SK PLT Tools 1.9.9.1."""
+"""Static release validation for SK PLT Tools 2.0.0.0."""
 from pathlib import Path
 from bs4 import BeautifulSoup
 import re, subprocess, sys
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='1.9.9.1'
+VERSION='2.0.0.0'
 EXPECTED_PAGES={
  'index.html','analogsignal/index.html','einheitenrechner/index.html','messstellen-doku/index.html',
  'pf-rechner/index.html','pt-rechner/index.html','servicewerte/index.html',

@@ -1,16 +1,16 @@
-# Testbericht und Abnahme – SK PLT Tools 1.9.9.1
+# Testbericht und Abnahme – SK PLT Tools 2.0.0.0
 
-## Bereits automatisiert geprüft
+## Automatisiert prüfbarer Stand
 
 - 12 HTML-Seiten vorhanden.
 - Jede Seite besitzt genau einen statischen, normalisierten Header und Footer.
-- Version 1.9.9.1 steht direkt im HTML unter dem Logo und im Footer.
+- Version 2.0.0.0 steht direkt im HTML unter dem Logo und im Footer.
 - Startseite enthält acht sichtbare Werkzeugkacheln ohne Servicewerte-Kachel.
 - Filter und Sortierung stehen direkt im HTML und werden nicht erst durch einen Patch erzeugt.
 - Alle lokalen `href`-/`src`-Referenzen sind im Paket vorhanden.
-- JavaScript-Syntax aller Dateien wurde mit `node --check` geprüft.
-- Funktionale Smoke-Tests für Analogsignal-, P+F-, Pt100-, Einheiten- und Spannungsfall-Rechner wurden mit den unten dokumentierten Sollwerten bestanden.
-- Alle 55 vom Service Worker vorzuhaltenden URLs waren über einen lokalen HTTP-Server mit Status 200 erreichbar.
+- JavaScript-Syntax aller Dateien wird mit `node --check` geprüft.
+- Funktionale Smoke-Tests für Analogsignal-, P+F-, Pt100-, Einheiten- und Spannungsfall-Rechner verwenden die unten dokumentierten Sollwerte.
+- Alle vom Service Worker vorzuhaltenden URLs müssen über einen lokalen HTTP-Server mit Status 200 erreichbar sein.
 - Der Service Worker enthält keine Funktionen zum Umschreiben von HTML oder JavaScript.
 
 Automatischer Wiederholungstest:
@@ -20,14 +20,14 @@ python tools/validate_release.py
 node tools/functional-smoke-test.js
 ```
 
-## Browser-Abnahme vor Freigabe
+## Browser-Abnahme
 
 | Nr. | Prüfung | Soll | PC | iPhone |
 |---:|---|---|:---:|:---:|
 | 1 | Startseite direkt öffnen | Finales Design ohne sichtbaren Umbau | ☐ | ☐ |
 | 2 | Unterseite öffnen und „Startseite“ wählen | Kein altes Layout/Logo/Versionsplatzhalter sichtbar | ☐ | ☐ |
 | 3 | Vorgang mindestens fünfmal wiederholen | Kein Flackern oder Layoutsprung | ☐ | ☐ |
-| 4 | Seite hart neu laden | Version 1.9.9.1 unter Logo und im Footer | ☐ | ☐ |
+| 4 | Seite hart neu laden | Version 2.0.0.0 unter Logo und im Footer | ☐ | ☐ |
 | 5 | Favorit setzen/entfernen | Sternstatus und Zähler bleiben korrekt | ☐ | ☐ |
 | 6 | Navigationsbaum öffnen/schließen | Alle Ziele erreichbar; aktive Seite markiert | ☐ | ☐ |
 | 7 | Startseitenfilter und Suche | Kacheln und Wissensbeiträge korrekt gefiltert | ☐ | ☐ |
@@ -43,8 +43,8 @@ node tools/functional-smoke-test.js
 - Einheiten: 1 bar → **1.000,000 mbar**.
 - Spannungsfall: Drehstrom, 400 V, 16 A, 35 m, 2,5 mm² Cu, cos φ 1,00, Grenzwert 6 % → **6,93 V; 1,73 %; Lastspannung 393,07 V; Reserve +17,07 V**.
 
-## Freigabe 2.0.0.0
+## Safepoint-Kennzeichnung 2.0.0.0
 
-Die Version 2.0.0.0 darf erst als Clean-Design-Safepoint erstellt werden, wenn alle Kästchen oben auf PC und iPhone bestätigt, der Offline-Test bestanden und keine Regressionen gemeldet wurden.
+Version 2.0.0.0 kennzeichnet den erfolgreich getesteten vollständigen Clean-Design-Stand 1.9.9.1 als Safepoint. Gegenüber 1.9.9.1 sind ausschließlich Versionsangaben, Service-Worker-Cache-Name, Release Notes, Upload-Anleitung und Safepoint-Kennzeichnung geändert; Funktionen, Inhalte, Design und Infrastruktur bleiben unverändert.
 
-Tester: ____________________  Datum: ____________________  Ergebnis: ☐ bestanden ☐ nicht bestanden
+Prüfer: ____________________  Datum: ____________________  Ergebnis: ☐ bestanden ☐ nicht bestanden

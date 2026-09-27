@@ -1,4 +1,4 @@
-const RELEASE='1.9.9.1';
+const RELEASE='2.0.0.0';
 const CACHE=`sk-plt-tools-v${RELEASE}-clean`;
 const CORE=[
   './','./index.html','./manifest.webmanifest',

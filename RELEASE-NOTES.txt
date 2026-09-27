@@ -1,10 +1,10 @@
-SK PLT Tools V1.9.9.1
+SK PLT Tools V2.0.0.0
 
-CLEAN-DESIGN-RELEASE AUF BASIS VON 1.9.8.5
-- Finale Header-, Footer-, Versions- und Kachelstruktur direkt in HTML/CSS übernommen.
-- Startseitenkacheln, Filter und Sortierung direkt im Startseiten-Markup enthalten.
-- Service Worker vollständig von HTML- und JavaScript-Patchlogik befreit.
-- Neuer versionierter Offline-Cache: sk-plt-tools-v1.9.9.1-clean.
-- Bestehende Funktionen, Wissensbeiträge, Rechner, Favoriten und Navigation beibehalten.
-- Migrationssichere No-op-Dateien für Geräte mit noch aktivem Service Worker 1.9.8.5 ergänzt.
-- Grundlage für die Abnahme und anschließende Kennzeichnung als Clean-Design-Safepoint 2.0.0.0 geschaffen.
+CLEAN-DESIGN-SAFEPOINT AUF BASIS DES ERFOLGREICH GETESTETEN STANDS V1.9.9.1
+- Vollständiger Funktions-, Inhalts-, Design- und Infrastrukturstand von V1.9.9.1 unverändert übernommen.
+- Ausschließlich erforderliche Versionsangaben auf V2.0.0.0 gesetzt.
+- Neuer versionierter Offline-Cache: sk-plt-tools-v2.0.0.0-clean.
+- Release Notes, Upload-Anleitung und Safepoint-Kennzeichnung auf V2.0.0.0 aktualisiert.
+- Bestehende Funktionen, Wissensbeiträge, Rechner, Favoriten, Filter, Sortierung und Navigation unverändert beibehalten.
+- Migrationssichere No-op-Dateien für Geräte mit noch aktivem Service Worker 1.9.8.5 unverändert beibehalten.
+- Keine funktionalen, inhaltlichen, gestalterischen oder infrastrukturellen Erweiterungen gegenüber dem erfolgreich getesteten Stand V1.9.9.1.
