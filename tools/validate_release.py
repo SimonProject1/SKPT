@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-"""Static release validation for SK PLT Tools 2.0.0.0."""
+"""Static release validation for SK PLT Tools 2.0.1.0."""
 from pathlib import Path
 from bs4 import BeautifulSoup
-import re, subprocess, sys
+import hashlib, json, re, subprocess, sys
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='2.0.0.0'
+VERSION='2.0.1.0'
 EXPECTED_PAGES={
  'index.html','analogsignal/index.html','einheitenrechner/index.html','messstellen-doku/index.html',
  'pf-rechner/index.html','pt-rechner/index.html','servicewerte/index.html',
  'spannungsfall-rechner/index.html','plausibilitaetspruefung-vde0100-600/index.html',
  'wissensdatenbank/index.html','wissensdatenbank/air-torque-antrieb-drehrichtung/index.html',
- 'wissensdatenbank/siemens-sitrans-p320-sil-verriegelung/index.html'
+ 'wissensdatenbank/siemens-sitrans-p320-sil-verriegelung/index.html',
+ 'wissensdatenbank/werkstoff-nachschlagewerk/index.html'
+}
+EXPECTED_MATERIAL_IDS={'1-4301','1-4401','1-4404','1-4408','1-4409','1-4435','1-4539','1-4571','2-4602','2-4605'}
+TEMPLATE_HASHES={
+ 'wissensdatenbank/vorlagen/Wissensdatenbank_Beitragsvorlage.pdf':'6fb4b02aa6033a628f426c7bb9e6bf7f21f132ca191a77c1eb012d9999cb04db',
+ 'wissensdatenbank/vorlagen/Wissensdatenbank_Beitragsvorlage.pdf.pdf':'65e3897a145099645fc7001aa328b81b1e86365b5613d18f559b04df43e1778d',
+ 'wissensdatenbank/vorlagen/Wissensdatenbank_Beitragsvorlage.docx':'95d130036ad3e2c9e5aa799ff696114bd8dadd0b9e326d66263f742d93079e98'
 }
 errors=[]
 pages={p.relative_to(ROOT).as_posix():p for p in ROOT.rglob('index.html')}
@@ -56,10 +63,66 @@ if len(start.select('.tools > a.card'))!=8: errors.append('Startseite: genau 8 s
 if start.select('a[href*="servicewerte"]'): errors.append('Startseite: entfernte Service-Kachel ist noch verlinkt')
 if not start.select_one('#skToolFilter #skToolSort'): errors.append('Startseite: Filter/Sortierung nicht statisch vorhanden')
 
+knowledge=BeautifulSoup((ROOT/'wissensdatenbank/index.html').read_text(encoding='utf-8'),'html.parser')
+material_tile=knowledge.select_one('a.knowledge-entry[href="werkstoff-nachschlagewerk/"]')
+if not material_tile: errors.append('Wissensdatenbank: Werkstoff-Kachel fehlt')
+elif 'tool-card' not in material_tile.get('class',[]): errors.append('Wissensdatenbank: Werkstoff-Kachel ist nicht in Favoriten integriert')
+
+material_page=BeautifulSoup((ROOT/'wissensdatenbank/werkstoff-nachschlagewerk/index.html').read_text(encoding='utf-8'),'html.parser')
+for selector in ('#materialSearch','#materialGroupFilters','#materialResults','#materialCompareSelect','#materialComparison'):
+    if not material_page.select_one(selector): errors.append(f'Werkstoffseite: Element fehlt: {selector}')
+for asset in ('materials.css','materials.js'):
+    if asset not in (ROOT/'wissensdatenbank/werkstoff-nachschlagewerk/index.html').read_text(encoding='utf-8'): errors.append(f'Werkstoffseite: {asset} fehlt')
+
+try:
+    materials=json.loads((ROOT/'assets/materials.json').read_text(encoding='utf-8'))
+except Exception as exc:
+    errors.append(f'materials.json ungültig: {exc}');materials={}
+items=materials.get('materials',[])
+ids={item.get('id') for item in items}
+if ids!=EXPECTED_MATERIAL_IDS: errors.append(f'Werkstoff-IDs abweichend: {sorted(ids)}')
+if len(items)!=10: errors.append(f'Genau 10 Werkstoffdatensätze erwartet, gefunden {len(items)}')
+groups={group.get('id') for group in materials.get('groups',[])}
+required_fields=('materialNumber','shortName','group','productForm','explanation','searchTerms','related','doNotConfuseWith','sources')
+for item in items:
+    for field in required_fields:
+        if not item.get(field): errors.append(f'{item.get("id","?")}: Pflichtfeld fehlt/leer: {field}')
+    if item.get('group') not in groups: errors.append(f'{item.get("id","?")}: unbekannte Werkstoffgruppe')
+    if not all(source.get('url','').startswith('https://') for source in item.get('sources',[])): errors.append(f'{item.get("id","?")}: Quelle ohne HTTPS')
+notice=materials.get('safetyNotice','')
+for phrase in ('keine automatische Werkstofffreigabe','keine pauschale Medienbeständigkeitsbewertung'):
+    if phrase.lower() not in notice.lower(): errors.append(f'Sicherheitshinweis unvollständig: {phrase}')
+
+def norm(value):
+    import unicodedata
+    value=unicodedata.normalize('NFD',str(value or '').lower()).replace('ß','ss')
+    return re.sub(r'[^a-z0-9]+','', ''.join(ch for ch in value if unicodedata.category(ch)!='Mn'))
+def matches(item,query):
+    hay=' '.join(norm(value) for value in [item.get('materialNumber'),item.get('shortName'),item.get('uns'),*item.get('internationalDesignations',[]),*item.get('searchTerms',[])])
+    return all(norm(term) in hay for term in str(query).split() if norm(term))
+if {item['id'] for item in items if matches(item,'316L')}!={'1-4404','1-4409','1-4435'}: errors.append('Werkstoffsuche: 316L liefert nicht die drei erwarteten Zuordnungen')
+if {item['id'] for item in items if matches(item,'14404')}!={'1-4404'}: errors.append('Werkstoffsuche: 14404 ist nicht eindeutig 1.4404')
+if {item['id'] for item in items if item.get('group')=='cast-stainless' and matches(item,'316L')}!={'1-4409'}: errors.append('Werkstoffsuche: 316L mit Stahlgussfilter ist nicht 1.4409')
+comparison_ids={item.get('id') for item in materials.get('comparisons',[])}
+if not {'316-vs-316l','14404-vs-14408'}<=comparison_ids: errors.append('Pflichtvergleiche fehlen')
+
+search_index=json.loads((ROOT/'assets/search-index.json').read_text(encoding='utf-8'))
+if not any(item.get('url')=='wissensdatenbank/werkstoff-nachschlagewerk/' and item.get('passthroughQuery') and item.get('catalog')=='materials' for item in search_index): errors.append('Startseitensuche: zentral angebundener Werkstoffbereich mit Suchübergabe fehlt')
+if 'assets/materials.json' not in (ROOT/'assets/start-filter.js').read_text(encoding='utf-8'): errors.append('Startseitensuche: zentrale Werkstoffdatei wird nicht geladen')
+nav=json.loads((ROOT/'assets/navigation-tree.json').read_text(encoding='utf-8'))
+if 'wissensdatenbank/werkstoff-nachschlagewerk/' not in json.dumps(nav): errors.append('Navigationsbaum: Werkstoffbereich fehlt')
+
 sw=(ROOT/'service-worker.js').read_text(encoding='utf-8')
 for forbidden in ('enhanceHtml','enhanceJs','.replace(\'</head>\'','.replace(\'</body>\''):
     if forbidden in sw: errors.append(f'Service Worker enthält verbotene Laufzeit-Patchlogik: {forbidden}')
 if f"const RELEASE='{VERSION}'" not in sw: errors.append('Service Worker verwendet falsche Version')
+for required in ('./assets/materials.json','./assets/materials.js','./assets/materials.css','./wissensdatenbank/werkstoff-nachschlagewerk/index.html'):
+    if required not in sw: errors.append(f'Service Worker: Precache-Eintrag fehlt: {required}')
+
+for rel,expected in TEMPLATE_HASHES.items():
+    path=ROOT/rel
+    actual=hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else ''
+    if actual!=expected: errors.append(f'Vorlage verändert oder fehlt: {rel}')
 
 for script in ROOT.rglob('*.js'):
     result=subprocess.run(['node','--check',str(script)],capture_output=True,text=True)
@@ -69,4 +132,4 @@ if errors:
     print('FEHLER')
     for error in errors: print('-',error)
     sys.exit(1)
-print(f'OK: {len(pages)} Seiten, 8 Startseitenkacheln, lokale Referenzen und JavaScript geprüft.')
+print(f'OK: {len(pages)} Seiten, 8 Startseitenkacheln, 10 Werkstoffe, Integrationen, Vorlagen-Hashes, lokale Referenzen und JavaScript geprüft.')

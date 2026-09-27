@@ -32,4 +32,19 @@ runInline('pt-rechner/index.html','function r(t,r0)',{
  const context={console,Math,Number,Intl,Array,String,document:{readyState:'complete',getElementById:id=>elements[id],querySelectorAll:selector=>selector==='input'?[elements.current,elements.length,elements.cosphi,elements.limit]:[]},alert:message=>{throw new Error(message)}};vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(ROOT,'spannungsfall-rechner/calculator.js'),'utf8'),context,{filename:'calculator.js'});elements.calculate.onclick();
  assertEqual(elements.dropV.textContent,'6,93 V','Spannungsfall ΔU');assertEqual(elements.dropPercent.textContent,'1,73 %','Spannungsfall Prozent');assertEqual(elements.loadVoltage.textContent,'393,07 V','Spannungsfall Lastspannung');assertEqual(elements.reserve.textContent,'+17,07 V','Spannungsfall Reserve');
 }
-console.log('OK: Rechner-Smoke-Tests abgeschlossen.');
+{
+  const context={console,window:{}};
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(ROOT,'assets/materials.js'),'utf8'),context,{filename:'assets/materials.js'});
+  const api=context.window.SK_MATERIALS;
+  if(!api)throw new Error('Werkstoff-Suchfunktionen wurden nicht exportiert.');
+  const data=JSON.parse(fs.readFileSync(path.join(ROOT,'assets/materials.json'),'utf8'));
+  const ids=(query,group='all')=>api.filterMaterials(data.materials,query,group).map(item=>item.id).sort().join(',');
+  assertEqual(ids('316L'),'1-4404,1-4409,1-4435','Werkstoffsuche 316L Mehrfachtreffer');
+  assertEqual(ids('1.4404'),'1-4404','Werkstoffsuche 1.4404');
+  assertEqual(ids('14404'),'1-4404','Werkstoffsuche 14404 ohne Punkt');
+  assertEqual(ids('CF8M'),'1-4408','Werkstoffsuche CF8M');
+  assertEqual(ids('316L','cast-stainless'),'1-4409','Werkstofffilter 316L Stahlguss');
+  assertEqual(ids('Alloy 59'),'2-4605','Werkstoffsuche Alloy 59');
+}
+console.log('OK: Rechner- und Werkstoff-Smoke-Tests abgeschlossen.');

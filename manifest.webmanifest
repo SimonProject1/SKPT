@@ -2,7 +2,7 @@
   "id": "./",
   "name": "SK PLT Tools",
   "short_name": "SK PLT Tools",
-  "description": "Praktische Werkzeuge für die Prozessleittechnik · Clean Design Safepoint 2.0.0.0",
+  "description": "Praktische Werkzeuge und Wissensdatenbank für die Prozessleittechnik · Version 2.0.1.0",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

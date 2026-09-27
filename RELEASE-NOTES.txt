@@ -1,10 +1,45 @@
-SK PLT Tools V2.0.0.0
+SK PLT Tools V2.0.1.0
 
-CLEAN-DESIGN-SAFEPOINT AUF BASIS DES ERFOLGREICH GETESTETEN STANDS V1.9.9.1
-- Vollständiger Funktions-, Inhalts-, Design- und Infrastrukturstand von V1.9.9.1 unverändert übernommen.
-- Ausschließlich erforderliche Versionsangaben auf V2.0.0.0 gesetzt.
-- Neuer versionierter Offline-Cache: sk-plt-tools-v2.0.0.0-clean.
-- Release Notes, Upload-Anleitung und Safepoint-Kennzeichnung auf V2.0.0.0 aktualisiert.
-- Bestehende Funktionen, Wissensbeiträge, Rechner, Favoriten, Filter, Sortierung und Navigation unverändert beibehalten.
-- Migrationssichere No-op-Dateien für Geräte mit noch aktivem Service Worker 1.9.8.5 unverändert beibehalten.
-- Keine funktionalen, inhaltlichen, gestalterischen oder infrastrukturellen Erweiterungen gegenüber dem erfolgreich getesteten Stand V1.9.9.1.
+WERKSTOFF-NACHSCHLAGEWERK AUF BASIS DES CLEAN-DESIGN-SAFEPOINTS V2.0.0.0
+
+Neu
+- Hersteller- und geräteunabhängiger Wissensbereich „Werkstoff-Nachschlagewerk“ innerhalb der bestehenden Wissensdatenbank.
+- Großes Suchfeld mit toleranter Suche: Werkstoffnummern funktionieren mit und ohne Punkt; alternative Bezeichnungen, Kurznamen, AISI/ASTM- und UNS-Angaben werden berücksichtigt.
+- Filter nach Werkstoffgruppen: austenitischer Edelstahl, austenitischer Stahlguss und Nickelbasislegierung.
+- Verständliche Ergebnis-Karten mit Werkstoffnummer, Kurzname, internationalen Bezeichnungen, UNS, Werkstoffgruppe, Erzeugnisform, Kurzbeschreibung, verwandten Werkstoffen, „Nicht verwechseln mit“, Quellenlinks und einheitlichem Sicherheitshinweis.
+- Mehrfachtreffer für nicht eindeutige Bezeichnungen. Die Suche nach „316L“ zeigt bewusst 1.4404, 1.4409/CF3M und 1.4435.
+- Vergleichsfunktion für „316 gegen 316L“ sowie „1.4404 gegen 1.4408“.
+- Zentrale, erweiterbare Datendatei `assets/materials.json`.
+
+Erstdatenbestand
+- 1.4301 / 304
+- 1.4401 / 316
+- 1.4404 / 316L
+- 1.4408 / GX5CrNiMo19-11-2 / CF8M
+- 1.4409 / GX2CrNiMo19-11-2 / CF3M
+- 1.4435 / 316L
+- 1.4539 / 904L
+- 1.4571 / 316Ti
+- 2.4602 / Alloy C22
+- 2.4605 / Alloy 59
+
+Integration
+- Neue Wissenskachel in der Wissensdatenbank.
+- Treffer aus der Startseitensuche öffnen das Nachschlagewerk mit übernommenem Suchbegriff.
+- Die Wissenskachel und dynamische Startseiten-Treffer lassen sich über die bestehende Favoritenfunktion speichern.
+- Neuer Eintrag im bestehenden Navigationsbaum.
+- Werkstoffseite und zentrale Datendatei sind im Offline-Cache enthalten.
+
+Sicherheit und Abgrenzung
+- Keine automatische Werkstofffreigabe.
+- Keine pauschale Medienbeständigkeitsbewertung.
+- Keine Behauptung vollständiger Austauschbarkeit.
+- Deutliche Trennung von Walz-/Knetwerkstoffen und Stahlguss, insbesondere 1.4404 gegenüber 1.4408 sowie 316L gegenüber CF3M.
+- Quellenlinks sind direkt an jedem Datensatz hinterlegt; Datenstand 27.09.2026.
+
+Unverändert
+- Clean-Design-Architektur und bestehende Infrastruktur des Safepoints V2.0.0.0.
+- Bestehende Rechner, Wissensbeiträge, Dokumentationsfunktionen, Favoriten-, Filter-, Sortier- und Navigationslogik.
+- Service Worker weiterhin ohne Response-Rewriting; nur Cache-/Offline-Funktion.
+- Editierbare Wissensdatenbank-PDF und ihre Vorlage bleiben bytegenau unverändert.
+- Migrationssichere No-op-Dateien bleiben erhalten.
