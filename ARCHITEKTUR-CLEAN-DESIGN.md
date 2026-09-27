@@ -1,8 +1,8 @@
-# Clean-Design-Architektur 2.0.1.1
+# Clean-Design-Architektur 2.0.1.2
 
 ## Unveränderte Grundlage
 
-Version 2.0.1.1 baut auf Version 2.0.1.0 und dem Clean-Design-Safepoint 2.0.0.0 auf. Die Grundprinzipien bleiben unverändert:
+Version 2.0.1.2 baut auf Version 2.0.1.1 und dem Clean-Design-Safepoint 2.0.0.0 auf. Die Grundprinzipien bleiben unverändert:
 
 - finale Headerstruktur direkt in jeder HTML-Datei
 - Version direkt unter dem Logo in jeder HTML-Datei
@@ -13,9 +13,20 @@ Version 2.0.1.1 baut auf Version 2.0.1.0 und dem Clean-Design-Safepoint 2.0.0.0 
 - Service Worker ohne Response-Rewriting; nur Precache, Network-first für Navigation und Cache-Fallback
 - alte Patch-Dateinamen ausschließlich als wirkungslose No-op-Kompatibilitätsdateien
 
-## Favoritenkorrektur in 2.0.1.1
+## Brotkrümelnavigation in 2.0.1.2
 
-Die Korrektur verwendet ausschließlich das bestehende Favoritensystem:
+Die Werkstoffseite verwendet jetzt dieselbe statische Navigationsstruktur wie die vorhandenen Wissensbeiträge:
+
+- semantisches `nav` mit `aria-label="Brotkrümelnavigation"`
+- Link `Startseite` auf `../../`
+- Link `Wissensdatenbank` auf `../`
+- aktueller, nicht verlinkter Eintrag `Werkstoff-Nachschlagewerk`
+- Darstellung über die vorhandene Werkstoff-Stylesheet-Datei, optisch passend zu Air Torque und Siemens Sitrans P320
+- keine neue JavaScript-Logik, keine Laufzeit-Patches und keine Änderung am Navigationsbaum
+
+## Favoritenkorrektur aus 2.0.1.1
+
+Die vorhandene Korrektur bleibt unverändert:
 
 - Alle drei Links im Raster `#knowledgeGrid` sind als `knowledge-entry tool-card` gekennzeichnet.
 - `assets/favorites.js` bleibt die einzige Favoritenlogik und verwendet unverändert `skPltToolsFavoritesV2` im Local Storage.

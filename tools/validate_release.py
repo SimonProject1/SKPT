@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Static release validation for SK PLT Tools 2.0.1.1."""
+"""Static release validation for SK PLT Tools 2.0.1.2."""
 from pathlib import Path
 from bs4 import BeautifulSoup
 import hashlib, json, re, subprocess, sys
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='2.0.1.1'
+VERSION='2.0.1.2'
 EXPECTED_PAGES={
  'index.html','analogsignal/index.html','einheitenrechner/index.html','messstellen-doku/index.html',
  'pf-rechner/index.html','pt-rechner/index.html','servicewerte/index.html',
@@ -79,6 +79,16 @@ for required in ("const KEY='skPltToolsFavoritesV2'",'localStorage.getItem(KEY)'
     if required not in favorites: errors.append(f'Favoritensystem: erforderliche Persistenz-/Klicklogik fehlt: {required}')
 
 material_page=BeautifulSoup((ROOT/'wissensdatenbank/werkstoff-nachschlagewerk/index.html').read_text(encoding='utf-8'),'html.parser')
+breadcrumb=material_page.select_one('nav.knowledge-breadcrumb[aria-label="Brotkrümelnavigation"]')
+if breadcrumb is None:
+    errors.append('Werkstoffseite: Brotkrümelnavigation fehlt')
+else:
+    labels=[part.get_text(' ',strip=True) for part in breadcrumb.find_all(['a','span'])]
+    if labels!=['Startseite','›','Wissensdatenbank','›','Werkstoff-Nachschlagewerk']:
+        errors.append(f'Werkstoffseite: Breadcrumb-Beschriftung falsch: {labels}')
+    links=[link.get('href') for link in breadcrumb.find_all('a')]
+    if links!=['../../','../']:
+        errors.append(f'Werkstoffseite: Breadcrumb-Linkziele falsch: {links}')
 for selector in ('#materialSearch','#materialGroupFilters','#materialResults','#materialCompareSelect','#materialComparison'):
     if not material_page.select_one(selector): errors.append(f'Werkstoffseite: Element fehlt: {selector}')
 for asset in ('materials.css','materials.js'):
@@ -143,4 +153,4 @@ if errors:
     print('FEHLER')
     for error in errors: print('-',error)
     sys.exit(1)
-print(f'OK: {len(pages)} Seiten, 8 Startseitenkacheln, 3 favoritenfähige Wissenskacheln, 10 Werkstoffe, Integrationen, Vorlagen-Hashes, lokale Referenzen und JavaScript geprüft.')
+print(f'OK: {len(pages)} Seiten, Werkstoff-Breadcrumb, 8 Startseitenkacheln, 3 favoritenfähige Wissenskacheln, 10 Werkstoffe, Integrationen, Vorlagen-Hashes, lokale Referenzen und JavaScript geprüft.')

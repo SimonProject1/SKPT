@@ -1,14 +1,13 @@
-# SK PLT Tools 2.0.1.1
+# SK PLT Tools 2.0.1.2
 
-Vollständiges Release auf Basis von Version 2.0.1.0 und des Clean-Design-Safepoints 2.0.0.0.
+Vollständiges Release auf Basis von Version 2.0.1.1 und des Clean-Design-Safepoints 2.0.0.0.
 
-## Änderung in 2.0.1.1
+## Änderung in 2.0.1.2
 
-- Alle Wissenskacheln verwenden einheitlich das bestehende Favoritensystem.
-- Favoritensterne sind beim Werkstoff-Nachschlagewerk, bei Air Torque Antrieb und Siemens Sitrans P320 verfügbar.
-- Gespeicherte Favoriten erscheinen im linken Favoritenmenü und bleiben mit dem vorhandenen Local-Storage-Schlüssel auf allen Seiten erhalten.
-- Der Sternklick setzt oder entfernt nur den Favoriten; die normale Klickfunktion der Kachel bleibt unverändert.
-- Service-Worker-Release und Cache heißen jetzt `2.0.1.1` und `sk-plt-tools-v2.0.1.1-clean`.
+- Das Werkstoff-Nachschlagewerk enthält jetzt die fehlende Brotkrümelnavigation `Startseite › Wissensdatenbank › Werkstoff-Nachschlagewerk`.
+- Die beiden Navigationslinks führen korrekt zum Webroot und zur Wissensdatenbank-Übersicht.
+- Gestaltung und Verhalten entsprechen den vorhandenen Wissensbeiträgen Air Torque und Siemens Sitrans P320.
+- Service-Worker-Release und Cache heißen jetzt `2.0.1.2` und `sk-plt-tools-v2.0.1.2-clean`.
 
 ## Inhalt
 
@@ -25,6 +24,7 @@ Vollständiges Release auf Basis von Version 2.0.1.0 und des Clean-Design-Safepo
 
 Die Seite `wissensdatenbank/werkstoff-nachschlagewerk/` unterstützt:
 
+- Brotkrümelnavigation zurück zur Startseite und zur Wissensdatenbank
 - Suche nach Werkstoffnummer mit und ohne Punkt
 - Suche nach Kurzname, AISI/ASTM-Bezeichnung, UNS und gebräuchlichen Namen
 - Filter nach Werkstoffgruppen
@@ -35,13 +35,23 @@ Die Seite `wissensdatenbank/werkstoff-nachschlagewerk/` unterstützt:
 
 Die Inhalte dienen nur der Orientierung. Es erfolgt keine automatische Werkstofffreigabe, keine pauschale Medienbeständigkeitsbewertung und keine Zusage vollständiger Austauschbarkeit.
 
+## Unverändert übernommen
+
+- Favoriten-Fix aus Version 2.0.1.1 mit dem vorhandenen Local-Storage-Schlüssel `skPltToolsFavoritesV2`
+- Clean Design, Header, Footer, Kachelgestaltung und eingefrorene Infrastruktur
+- Rechner, Dokumentationsfunktionen, Gerätewissen, Filter, Sortierung und Navigation
+- Service Worker ohne Response-Rewriting
+- No-op-Kompatibilitätsdateien
+- Wissensdatenbank-Vorlagen einschließlich der editierbaren PDF bytegenau
+
 ## Installation
 
 1. Vorhandenen Webroot vollständig sichern.
-2. Den **gesamten Inhalt des Ordners `SK-PLT-Tools-V2.0.1.1`** in den Webroot hochladen und vorhandene Dateien ersetzen.
-3. `service-worker.js` im gleichen Webroot wie `index.html` belassen.
-4. Website einmal online öffnen und neu laden, damit Cache `sk-plt-tools-v2.0.1.1-clean` aktiviert wird.
-5. `TESTBERICHT-UND-ABNAHME.md` durchführen.
+2. Das Paket `SK-PLT-Tools-V2.0.1.2.zip` vollständig entpacken.
+3. Den **gesamten Inhalt des Ordners `SK-PLT-Tools-V2.0.1.2`** in den Webroot hochladen und vorhandene Dateien ersetzen.
+4. `service-worker.js` im gleichen Webroot wie `index.html` belassen.
+5. Website einmal online öffnen und neu laden, damit Cache `sk-plt-tools-v2.0.1.2-clean` aktiviert wird.
+6. `TESTBERICHT-UND-ABNAHME.md` durchführen.
 
 ## Clean Design und Infrastruktur
 
@@ -60,4 +70,4 @@ python -m http.server 8080
 
 Danach `http://localhost:8080/` öffnen und die Browser-Abnahme aus `TESTBERICHT-UND-ABNAHME.md` durchführen.
 
-Version 2.0.1.1 · Entwickelt von Simon Kiesler
+Version 2.0.1.2 · Entwickelt von Simon Kiesler
