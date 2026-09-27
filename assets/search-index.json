@@ -1,15 +1,4 @@
 [
-  {
-    "id": "air-torque-antrieb-drehrichtung",
-    "type": "WISSENSBEITRAG",
-    "category": "WISSEN",
-    "manufacturer": "Air Torque",
-    "device": "Antrieb",
-    "topic": "Drehrichtung",
-    "title": "Air Torque – Antrieb – Drehrichtung",
-    "description": "Bedeutung der Kennzeichnungen SCO und SCC auf dem Typenschild eines Air-Torque-Antriebs.",
-    "breadcrumb": ["Wissensdatenbank", "Air Torque", "Antrieb", "Drehrichtung"],
-    "keywords": ["AirTorque", "Air Torque", "Antrieb", "Drehrichtung", "SCO", "SCC", "Uhrzeigersinn", "gegen den Uhrzeigersinn", "Typenschild", "Federkraft"],
-    "url": "wissensdatenbank/air-torque-antrieb-drehrichtung/"
-  }
+  {"type":"Wissensbeitrag","manufacturer":"Air Torque","device":"Antrieb","topic":"Drehrichtung","description":"Bedeutung der Kennzeichnungen SCO und SCC.","keywords":["AirTorque","Air Torque","Antrieb","Drehrichtung","SCO","SCC","Uhrzeigersinn","Federkraft"],"url":"wissensdatenbank/air-torque-antrieb-drehrichtung/"},
+  {"type":"Wissensbeitrag","manufacturer":"Siemens","device":"Sitrans P320","topic":"SIL-Verriegelung","description":"SIL-Funktion mit SIMATIC PDM aktivieren; Schreibschutz und Initial-PIN beachten.","keywords":["Siemens","Sitrans","P320","SIL","Verriegelung","SIMATIC PDM","Schreibschutz","2457","PIN"],"url":"wissensdatenbank/siemens-sitrans-p320-sil-verriegelung/"}
 ]
