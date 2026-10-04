@@ -1,31 +1,29 @@
-SK PLT Tools V2.0.2.0
+SK PLT Tools 2.1.0.0
+Release-Datum: 04.10.2026
 
-VACON-WISSENSBEITRAG AUF BASIS VON V2.0.1.2
+ZIEL
+- Offizielle, vollständige Release-Version des vollständig geprüften Vorgängerstands.
+- Keine Entfernung von Rechnern, Wissensbeiträgen, Direktlinks, mobilen Funktionen oder PWA-/Offline-Fähigkeiten.
+- Sämtliche aktuellen technischen und sichtbaren Versionsangaben sind auf 2.1.0.0 vereinheitlicht.
 
-Neu
-- Neuer Wissensbeitrag „Vacon · Frequenzumrichter · Ist-/Sollwert-Abweichung im PLS“.
-- Bei abweichendem Ist- und Sollwert wird die Kontrolle von Parameter 2.2.3.7 beschrieben.
-- Als Regelfall ist die Einstellung auf die maximale Frequenz dokumentiert.
-- Der Beitrag besitzt eine statische Brotkrümelnavigation, responsives Clean Design und einen fachlichen Prüfhinweis vor Parameteränderungen.
-- Neue Wissenskachel mit Favoritenintegration.
-- Die Wissenssuche blendet nicht passende Kacheln jetzt zuverlässig über das `hidden`-Attribut aus.
-- Einbindung in den zentralen Suchindex und den Navigationsbaum.
-- Offline-Precache für die Vacon-Seite und `assets/vacon-wissen.css`.
+RELEASE-UMSTELLUNG
+- Vorabkennzeichnungen aus Produktname, Header, Footer, Seitentiteln, Manifest und Laufzeitmetadaten entfernt.
+- PWA-ID und Start-URL auf ./?app=sk-plt-tools-2.1.0.0 gesetzt.
+- Release-Cache auf sk-plt-tools-v2.1.0.0 gesetzt.
+- VERSION, release-config.json, navigation-tree.json, Manifest, HTML-Cacheparameter, App- und Service-Worker-Konstanten synchronisiert.
+- Gemeinsame Header-, Footer- und Trigger-Bereiche aus shared/ neu synchronisiert.
+- Release-Automatisierung für stabile Versionsnummern im Format X.Y.Z.W erweitert.
 
-Technische Umsetzung
-- Neue statische Seite `wissensdatenbank/vacon-frequenzumrichter-ist-sollwert-abweichung/index.html`.
-- Neues Stylesheet `assets/vacon-wissen.css` ohne Laufzeit-Patchlogik.
-- Statische Release-Prüfung und funktionaler Smoke-Test prüfen Seite, Parameter, Suchindex, Navigation, Favoriten und Offline-Precache.
-- Service-Worker-Release und Cache-Name wurden auf `2.0.2.0` beziehungsweise `sk-plt-tools-v2.0.2.0-clean` angehoben.
+STRUKTUR UND WARTUNG
+- Gemeinsame Styles bleiben in assets/core.css gebündelt.
+- Basis, Favoriten, Suche, Sortierung und Navigation bleiben in assets/app.js gebündelt.
+- Fachmodule der Rechner und Wissensseiten bleiben getrennt.
+- assets/navigation-tree.json bleibt die zentrale Navigationsquelle.
+- Die Offline-Precache-Liste wird aus dem tatsächlichen Webbestand erzeugt.
 
-Unverändert
-- Sämtliche Rechnerfunktionen und Sollwerte.
-- Bestehende Wissensbeiträge Air Torque und Siemens Sitrans P320.
-- Werkstoff-Nachschlagewerk mit zehn Datensätzen, Filtern, Vergleichen, Quellen und Breadcrumb.
-- Favoritensystem mit `skPltToolsFavoritesV2`.
-- Clean Design, Header, Footer, Kachelgestaltung und eingefrorene Infrastruktur.
-- Service Worker ohne Response-Rewriting.
-- Editierbare Wissensdatenbank-PDF und die übrigen Vorlagendateien bleiben bytegenau unverändert.
-- Migrationssichere No-op-Dateien bleiben erhalten.
-
-Datenstand: 28.09.2026.
+PRÜFUNG
+- Funktionsprüfung aller Rechner und fachlichen Suchfunktionen.
+- Statische Prüfung aller 16 Seiten, lokalen Referenzen, Navigationsziele und Prüfsummen.
+- Browserprüfung auf Desktop-, Tablet- und Mobilbreite.
+- Interaktionstests für Suche, Filter, Sortierung, Favoriten und Navigation.
+- PWA-Registrierung sowie Offline-Aufruf von Startseite, Rechner, Wissensseite und zentralen JSON-/CSS-/JS-Ressourcen.

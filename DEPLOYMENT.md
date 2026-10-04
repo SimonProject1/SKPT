@@ -1,35 +1,51 @@
-# Upload-Anleitung – SK PLT Tools 2.0.2.0
+# Deployment – SK PLT Tools 2.1.0.0
 
-## Vorbereitungen
+## Voraussetzungen
 
-- Aktuell veröffentlichten Webroot vollständig sichern.
-- Prüfen, dass das Zielsystem statische HTML-, CSS-, JavaScript-, JSON-, PNG-, PDF-, DOCX- und Webmanifest-Dateien unverändert ausliefert.
-- Nicht nur Einzel- oder Patchdateien ersetzen: Version 2.0.2.0 ist ein vollständig gemeinsam geprüfter Projektstand.
+- Statischer Webserver mit HTTPS für Produktion; `localhost` ist für lokale PWA-Tests zulässig
+- Alle Dateien und Ordner des ZIP-Pakets unverändert gemeinsam bereitstellen
+- Vor dem Austausch des produktiven Webroots eine Sicherung der bestehenden Installation erstellen
 
-## Upload und Rollout
+## Installation
 
-1. Das Downloadpaket `SK-PLT-Tools-V2.0.2.0.zip` vollständig entpacken.
-2. Alle Dateien und Ordner **aus dem Ordner `SK-PLT-Tools-V2.0.2.0`** in den Webroot kopieren und vorhandene Dateien ersetzen.
-3. Prüfen, dass insbesondere die neue Seite `wissensdatenbank/vacon-frequenzumrichter-ist-sollwert-abweichung/index.html`, `assets/vacon-wissen.css`, `assets/search-index.json`, `assets/navigation-tree.json` und `service-worker.js` übertragen wurden.
-4. Sonstige `assets/version-*.js` aus älteren Releases löschen. Die mitgelieferte `assets/version-1.9.8.5.js` ist ein absichtlicher No-op für die Migration und bleibt Bestandteil dieses Pakets.
-5. `service-worker.js` muss im gleichen Webroot wie `index.html` liegen.
-6. Die Anwendung einmal mit Netzwerkverbindung öffnen und anschließend neu laden. Dadurch wird der Cache `sk-plt-tools-v2.0.2.0-clean` aktiviert; ältere Cache-Namen werden entfernt.
-7. Im Browser kontrollieren, dass unter dem Logo und im Footer „Version 2.0.2.0“ angezeigt wird.
-8. Die Wissensdatenbank öffnen. Es müssen vier Wissenskacheln sichtbar sein: Werkstoff-Nachschlagewerk, Air Torque Antrieb, Siemens Sitrans P320 und Vacon Frequenzumrichter.
-9. Den Vacon-Beitrag öffnen und Brotkrümelnavigation, Hersteller, Gerät, Thema, Parameter `2.2.3.7` und den Hinweis zur maximalen Frequenz prüfen.
-10. Bei allen vier Wissenskacheln Favorit setzen und entfernen. Jeder Eintrag muss im linken Favoritenmenü erscheinen; Seitenwechsel und Neuladen dürfen den Status nicht löschen.
-11. In der Startseitensuche nach `Vacon`, `2.2.3.7` und `maximale Frequenz` suchen. Der Vacon-Wissensbeitrag muss jeweils angeboten werden.
-12. Die vollständige Checkliste in `TESTBERICHT-UND-ABNAHME.md` durchführen.
-13. Die Paketintegrität mit `SHA256SUMS.txt` prüfen.
+1. `SK-PLT-Tools-V2.1.0.0.zip` entpacken.
+2. Den enthaltenen Ordner vollständig auf den Ziel-Webserver kopieren.
+3. Prüfen, dass `index.html`, `manifest.webmanifest`, `service-worker.js`, `assets/` und alle Modulordner unter demselben Webroot liegen.
+4. Startseite und mindestens einen direkten Unterseitenlink ohne vorherigen Startseitenbesuch öffnen.
+5. Bestehende Installation einmal online laden, bis der neue Service Worker aktiviert ist; anschließend Offline-Prüfung durchführen.
 
-## Wichtiger Hinweis zu den Wissensdatenbank-Vorlagen
+## Integritätsprüfung
 
-Die drei Dateien unter `wissensdatenbank/vorlagen/` wurden nicht inhaltlich verändert. Die statische Release-Prüfung kontrolliert weiterhin ihre bekannten SHA-256-Hashes.
+Im Projektordner:
 
-## Rückfall
+```bash
+sha256sum -c SHA256SUMS.txt
+```
 
-Bei einem Abbruch der Abnahme den zuvor gesicherten Webroot vollständig wiederherstellen. Anschließend Website-Daten beziehungsweise Service Worker der Site löschen oder eine harte Aktualisierung durchführen.
+Alle Einträge müssen `OK` melden.
 
-## Architekturhinweis
+## Technische Abnahme
 
-Die Clean-Design-Infrastruktur bleibt unverändert: finale Header-, Footer- und Kachelstrukturen stehen direkt im HTML; der Service Worker schreibt keine Antworten um. Version 2.0.2.0 ergänzt den Vacon-Wissensbeitrag und dessen statische Integrationen.
+```bash
+node tools/functional-smoke-test.js
+python tools/validate_release.py
+python -m http.server 4173
+# in einem zweiten Terminal:
+python tools/browser-smoke-test.py
+```
+
+Der Browser-Test prüft Desktop, Tablet, Mobilansicht, Direktlinks, Navigation, Suche, Sortierung, Favoriten, Rechnerinteraktionen, PWA-Registrierung und Offline-Aufrufe.
+
+## Update- und Rollback-Hinweise
+
+- Der neue Cache heißt `sk-plt-tools-v2.1.0.0`.
+- Der Service Worker entfernt ältere Caches mit dem Präfix `sk-plt-tools-`, einschließlich überholter Vorab-Caches.
+- Ein Rollback erfolgt durch vollständiges Wiederherstellen des vorherigen Webroots. Danach die vorherige Version einmal online öffnen, damit deren Service Worker wieder aktiv wird.
+
+## Neues Release erzeugen
+
+```bash
+python tools/release.py --version X.Y.Z.W --all
+```
+
+Vor der Weitergabe immer die drei Tests erneut ausführen und anschließend `SHA256SUMS.txt` sowie das ZIP neu erzeugen.

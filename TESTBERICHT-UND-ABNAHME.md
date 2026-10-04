@@ -1,68 +1,40 @@
-# Testcheckliste und Abnahme – SK PLT Tools 2.0.2.0
+# Testbericht und Abnahme – 2.1.0.0
 
-## Automatisierte Prüfung
+Prüfdatum: 04.10.2026
 
-Aus dem Projektordner ausführen:
+## Prüfumfang
 
-```bash
-python tools/validate_release.py
-node tools/functional-smoke-test.js
-```
+- 16 HTML-Seiten und alle direkten Seitenrouten
+- sechs Rechner, Messstellen-Dokumentation und VDE-0100-600-Prüfung
+- fünf Wissensbeiträge und Werkstoff-Nachschlagewerk
+- Startseitensuche, Kategorienfilter, Sortierung und Suchübergabe an das Werkstoffmodul
+- Favoriten hinzufügen, persistieren, öffnen und entfernen
+- Navigationsbaum aus `assets/navigation-tree.json`, Auf-/Zuklappen, aktive Links und mobile Darstellung
+- Desktop 1440 × 1050, Tablet 820 × 1180 und Mobil 390 × 844
+- PWA-Manifest, Service-Worker-Registrierung, Cache-Name, Precache und Offline-Aufrufe
+- lokale Referenzen, JavaScript-Syntax, Vorlagendateien und SHA-256-Integrität
 
-Die automatisierte Prüfung kontrolliert unter anderem:
+## Automatisierte Prüfungen
 
-- 14 erwartete HTML-Seiten
-- genau einen statischen Header und Footer je Seite
-- Version 2.0.2.0 in HTML, Skripten, Manifest und Service Worker
-- Cache-Namen `sk-plt-tools-v2.0.2.0-clean`
-- genau vier erwartete, favoritenfähige Wissenskacheln
-- Vacon-Seite mit Hersteller, Gerät, Thema, Parameter `2.2.3.7`, maximaler Frequenz und Stylesheet
-- Vacon-Einträge im Suchindex, Navigationsbaum und Offline-Precache
-- vollständige Brotkrümelnavigation auf der Werkstoffseite
-- acht unveränderte Startseiten-Werkzeugkacheln
-- vorhandenen Local-Storage-Schlüssel sowie Klickschutz- und Renderlogik des Favoritensystems
-- vollständige lokale Referenzen und JavaScript-Syntax
-- zehn Werkstoffdatensätze mit Pflichtfeldern, Quellen und gültigen Gruppen
-- Suchtreffer `14404` → `1.4404`
-- Mehrfachtreffer `316L` → `1.4404`, `1.4409` und `1.4435`
-- Gruppenfilter `316L` + Stahlguss → `1.4409`
-- Vergleiche `316 gegen 316L` und `1.4404 gegen 1.4408`
-- unveränderte Hashes der drei Vorlagendateien unter `wissensdatenbank/vorlagen/`
-- bestehende Rechner-Sollwerte
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Fachliche Funktions-Smoke-Tests | `node tools/functional-smoke-test.js` | Bestanden |
+| Statische Release-Validierung | `python tools/validate_release.py` | Bestanden: 16 Seiten, lokale Referenzen, Modulstruktur, Manifest, Precache, Syntax und Integrität |
+| Browser-/Responsive-/PWA-/Offline-Test | `python tools/browser-smoke-test.py` bei lokalem Server | Bestanden: Desktop, Tablet, Mobil, Suche, Filter, Sortierung, Favoriten, Navigation und Offline-Aufrufe |
+| Prüfsummen | `sha256sum -c SHA256SUMS.txt` | Bestanden |
+| ZIP-Struktur und Dekompression | `unzip -t` und Vergleich mit Projektbestand | Bestanden |
 
-## Browser-Abnahme
+## Abnahmekriterien
 
-| Nr. | Prüfung | Soll | PC | iPhone |
-|---:|---|---|:---:|:---:|
-| 1 | Startseite direkt öffnen | Finales Clean Design; Version 2.0.2.0 unter Logo und im Footer | ☐ | ☐ |
-| 2 | Wissensdatenbank öffnen | Vier Wissenskacheln sichtbar; jede zeigt einen Favoritenstern | ☐ | ☐ |
-| 3 | Vacon-Kachel öffnen | Seite „Ist-/Sollwert-Abweichung im PLS“ öffnet | ☐ | ☐ |
-| 4 | Vacon-Breadcrumb „Startseite“ wählen | Startseite öffnet korrekt | ☐ | ☐ |
-| 5 | Vacon-Breadcrumb „Wissensdatenbank“ wählen | Wissensübersicht öffnet korrekt | ☐ | ☐ |
-| 6 | Vacon-Inhalt prüfen | Vacon, Frequenzumrichter, Parameter 2.2.3.7 und maximale Frequenz korrekt sichtbar | ☐ | ☐ |
-| 7 | Vacon-Seite auf schmalem Display prüfen | Überschrift, Parameterkarte und Hinweis vollständig lesbar | ☐ | ☐ |
-| 8 | Vacon als Favorit setzen | Stern aktiv; Eintrag im linken Favoritenmenü | ☐ | ☐ |
-| 9 | Werkstoff, Air Torque und Siemens als Favoriten setzen | Alle vier Wissensfavoriten vorhanden | ☐ | ☐ |
-| 10 | Mit gesetzten Favoriten Seite wechseln und neu laden | Favoriten und Zähler bleiben erhalten | ☐ | ☐ |
-| 11 | Stern erneut wählen | Nur Favorit wird entfernt; keine Seitennavigation | ☐ | ☐ |
-| 12 | Kachel außerhalb des Sterns wählen | Zugehörige Wissensseite öffnet | ☐ | ☐ |
-| 13 | Wissenssuche `Vacon`, `PLS`, `2.2.3.7` | Vacon-Kachel bleibt jeweils sichtbar | ☐ | ☐ |
-| 14 | Startseitensuche `Vacon`, `2.2.3.7`, `maximale Frequenz` | Vacon-Wissensbeitrag wird jeweils angeboten | ☐ | ☐ |
-| 15 | Navigationsbaum öffnen | Vacon unter Wissensdatenbank erreichbar | ☐ | ☐ |
-| 16 | Werkstoff-Nachschlagewerk öffnen | Breadcrumb vollständig sichtbar | ☐ | ☐ |
-| 17 | Werkstoffsuche `1.4404`, `14404`, `316L`, `CF8M`, `Alloy 59` | Erwartete Einzel- und Mehrfachtreffer | ☐ | ☐ |
-| 18 | Gruppenfilter und Vergleiche | Filter sowie beide Direktvergleiche funktionieren | ☐ | ☐ |
-| 19 | Externe Quellenlinks | Öffnen in neuem Tab; Anwendungsnavigation bleibt erhalten | ☐ | ☐ |
-| 20 | Offline-Test nach Online-Aufruf | Startseite, Wissensseiten einschließlich Vacon, CSS/JS/JSON und Kernseiten laden aus Cache | ☐ | ☐ |
-| 21 | PDF-Vorlage herunterladen | Datei funktioniert und ist bytegenau unverändert | ☐ | ☐ |
-| 22 | Bestehende Rechner | Alle bisherigen Sollwerte unverändert | ☐ | ☐ |
+1. Kein Rechnerergebnis weicht von der validierten Ausgangsbasis ab.
+2. Jede HTML-Seite ist direkt erreichbar und besitzt genau einen Header, Footer, Favoriten- und Navigationstrigger.
+3. Keine Seite erzeugt horizontales Überlaufen auf Tablet oder Mobilgerät.
+4. Suche, Favoriten, Sortierung und Navigationsbaum bleiben bedienbar.
+5. Der Service Worker aktiviert den Cache `sk-plt-tools-v2.1.0.0` und liefert ausgewählte Seiten und Daten nach Offline-Schaltung aus.
+6. Alle lokalen Referenzen und alle in `navigation-tree.json` enthaltenen lokalen Ziele existieren.
+7. `SHA256SUMS.txt` stimmt vollständig mit dem Paketinhalt überein.
+8. Das ZIP enthält den vollständigen Projektordner als einzige oberste Ebene.
 
-## Rechner-Sollwerte
+## Ergebnis
 
-- Analogsignal: 0…100 auf 4…20 mA, Eingabe 50 → **12,000 mA / 50,0 %**.
-- P+F: X1=0, Y1=4, X2=100, Y2=20 → **K=0,160000; Nullpunkt=4,000000**.
-- Pt100: 0 °C → **100,000 Ω**.
-- Einheiten: 1 bar → **1.000,000 mbar**.
-- Spannungsfall: Drehstrom, 400 V, 16 A, 35 m, 2,5 mm² Cu, cos φ 1,00, Grenzwert 6 % → **6,93 V; 1,73 %; Lastspannung 393,07 V; Reserve +17,07 V**.
-
-Prüfer: ____________________  Datum: ____________________  Ergebnis: ☐ bestanden ☐ nicht bestanden
+**Bestanden.** Die automatisierten Prüfungen wurden am 04.10.2026 für die offizielle Release-Version 2.1.0.0 erfolgreich ausgeführt. Rechnerergebnisse und fachliche Inhalte entsprechen der validierten Ausgangsbasis; gemeinsame Funktionen, Direktseiten, Responsive-Verhalten sowie PWA- und Offline-Aufrufe sind funktionsfähig.

@@ -1,49 +1,48 @@
-# Clean-Design-Architektur 2.0.2.0
+# Architektur – SK PLT Tools 2.1.0.0
 
-## Unveränderte Grundlage
+## Leitprinzipien
 
-Version 2.0.2.0 baut auf Version 2.0.1.2 und dem Clean-Design-Safepoint 2.0.0.0 auf. Die Grundprinzipien bleiben unverändert:
+1. Fachfunktionen bleiben als eigenständige Rechner- bzw. Wissensmodule erhalten.
+2. Seitenübergreifende Darstellung und Laufzeitlogik werden zentral gepflegt.
+3. Jede HTML-Seite bleibt ein direkter, statischer Einstiegspunkt.
+4. Navigation, PWA und Offline-Betrieb funktionieren ohne Build-Server im produktiven Webroot.
+5. Entfernt werden nur nachweislich unreferenzierte oder vollständig übernommene Altdateien.
 
-- finale Headerstruktur direkt in jeder HTML-Datei
-- Version direkt unter dem Logo in jeder HTML-Datei
-- einheitlicher Footer direkt in jeder HTML-Datei
-- finale Startseitenkacheln sowie Filter- und Sortieroberfläche direkt in `index.html`
-- verbindliche Gestaltung in `assets/styles.css` und `assets/design.css`
-- JavaScript nur für echte Interaktionen und Berechnungen
-- Service Worker ohne Response-Rewriting; nur Precache, Network-first für Navigation und Cache-Fallback
-- alte Patch-Dateinamen ausschließlich als wirkungslose No-op-Kompatibilitätsdateien
+## Zentrale Laufzeitdateien
 
-## Vacon-Wissensbeitrag in 2.0.2.0
+- `assets/core.css` enthält gemeinsame Styles für Grundlayout, Design, Favoriten, Suche/Filter, Sortierung und Seitenbaum.
+- `assets/app.js` enthält Basisfunktionen, Service-Worker-Registrierung, Favoriten, Startseitensuche, Sortierung und Navigationsbaum.
+- `assets/navigation-tree.json` ist die zentrale Inhaltsquelle für den Navigationsbaum.
+- `assets/search-index.json` und `assets/materials.json` bleiben getrennte fachliche Datenquellen für Suche und Werkstoffe.
 
-Der neue Beitrag wird wie die vorhandenen Wissensseiten statisch integriert:
+## Fachmodule
 
-- Seitenziel `wissensdatenbank/vacon-frequenzumrichter-ist-sollwert-abweichung/index.html`
-- responsives Beitragslayout in `assets/vacon-wissen.css`
-- statische Brotkrümelnavigation zu Startseite und Wissensdatenbank
-- Wissenskachel als `knowledge-entry tool-card` für das bestehende Favoritensystem
-- Eintrag in `assets/search-index.json` für Startseitensuche und Suchbegriffe
-- Eintrag in `assets/navigation-tree.json`
-- Seite und Stylesheet im Service-Worker-Precache
-- keine neue Laufzeit-Patchlogik und kein neuer Persistenzmechanismus
+Eigene Dateien bleiben dort bestehen, wo sie fachliche Logik oder modulspezifische Darstellung kapseln:
 
-## Favoriten
+- `assets/siemens-analogwert-rechner.{css,js}`
+- `spannungsfall-rechner/calculator.{css,js}`
+- `plausibilitaetspruefung-vde0100-600/checker.{css,js}`
+- `assets/materials.{css,js,json}`
+- Wissensbeitrags-Styles für Air Torque, Siemens Sitrans und Vacon
 
-- Alle vier Links im Raster `#knowledgeGrid` sind als `knowledge-entry tool-card` gekennzeichnet.
-- `assets/favorites.js` bleibt die einzige Favoritenlogik und verwendet unverändert `skPltToolsFavoritesV2` im Local Storage.
-- Favoriten werden weiterhin zentral im linken Drawer gerendert und sind dadurch auf allen Seiten verfügbar.
-- `preventDefault()` und `stopPropagation()` gelten nur für den Stern-Button; die umgebende Kachel bleibt ein normaler Link.
+Damit bleiben Rechner und Wissensbeiträge klar getrennt, während globale Funktionen nicht mehrfach gepflegt werden.
 
-## Werkstoff-Nachschlagewerk
+## Gemeinsame Seitenelemente
 
-Das Werkstoff-Nachschlagewerk bleibt unverändert als reguläre Wissensseite integriert:
+`shared/header.html`, `shared/footer.html` und `shared/controls.html` sind die Vorlagen für die statisch ausgelieferten gemeinsamen Elemente. `shared/pages.json` enthält die seitenabhängigen Bezeichnungen und Rücksprungziele. `tools/sync_shared.py` synchronisiert die markierten Bereiche in allen 16 HTML-Seiten.
 
-- statisches Seitenziel `wissensdatenbank/werkstoff-nachschlagewerk/index.html`
-- Darstellung in `assets/materials.css`
-- Interaktion in `assets/materials.js`
-- zentrale Fachdaten, Filtergruppen, Quellen und Vergleiche in `assets/materials.json`
-- Einbindung über Startseitensuche, Wissenskacheln, Favoritenlogik und Navigationsbaum
-- statische Ressourcen im vorhandenen Service-Worker-Precache
+## PWA und Offline
 
-## Sicherheitsprinzip
+- PWA-ID und Start-URL: `./?app=sk-plt-tools-2.1.0.0`
+- Cache: `sk-plt-tools-v2.1.0.0`
+- `tools/release.py` erzeugt den Precache-Bestand automatisch aus den auslieferbaren Webdateien und direkten Seitenrouten.
+- Navigationen nutzen Network-first mit Cache-Fallback; statische Assets nutzen Cache-first.
+- Ältere SK-PLT-Tools-Caches mit gleichem Präfix werden bei Aktivierung entfernt; andere Anwendungen und Caches bleiben unberührt.
 
-Der Vacon-Beitrag ist als praktischer Prüfhinweis formuliert. Vor Parameteränderungen sind Herstellerdokumentation, Gerätestand sowie Motor-, Anlagen- und Inbetriebnahmevorgaben zu prüfen. Das Werkstoff-Nachschlagewerk erteilt weiterhin keine automatische Werkstofffreigabe und keine pauschale Medienbeständigkeitsbewertung.
+## Projektbereinigung
+
+Die bereits konsolidierte Struktur bleibt vollständig erhalten. Die aktive PDF-Beitragsvorlage und die DOCX-Quelldatei sind weiterhin Bestandteil des Projekts.
+
+## Release-Automatisierung
+
+`release-config.json` ist die zentrale Release-Konfiguration. `tools/release.py` aktualisiert Versionen in HTML, Manifest, App, Navigation und Service Worker, synchronisiert gemeinsame Seitenelemente, generiert die Offline-Liste, erstellt vollständige SHA-256-Prüfsummen und baut das komplette ZIP-Paket. Release-Versionen verwenden das Format `X.Y.Z.W`.
