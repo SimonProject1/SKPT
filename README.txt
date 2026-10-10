@@ -1,7 +1,27 @@
-SK PLT Tools 2.2.0.0
+SK PLT Tools 2.3.0.0
 
-Öffentliche stabile Release-Version der kompakten statischen Web-App für Rechner,
+Öffentliche stabile Version der kompakten statischen Web-App für Rechner,
 Wissensdatenbank und Einheitendatenbank.
+
+Freigabe dieser Version
+- Freigabebasis ist der vollständig getestete und bestätigte Funktionsstand vom 10.10.2026.
+- Die Werkzeugkarten der mobilen Startseite werden nach Rechner, Dokumentation, Wissen und externen Diensten gruppiert.
+- Jede mobile Kategorie kann über eine eigene, barrierearme Schaltfläche ein- und ausgeklappt werden.
+- Sichtbare Treffer und Gesamtzahl werden je Kategorie angezeigt; leere Kategorien werden bei aktiver Suche oder Filterung ausgeblendet.
+- Eine optionale kompakte Kartenansicht reduziert Kartenhöhe und blendet Beschreibungstexte aus.
+- Kategorie- und Ansichtsstatus bleiben lokal im Browser gespeichert.
+- Desktop und Tablet behalten die flache, vollständige Kartenansicht unverändert.
+
+Bewahrte Funktionen
+- Alle 10 Werkzeug-/Dienstkarten, Suche, Kategorienfilter, Sortierung und Wissensbeitragssuche bleiben vollständig erhalten.
+- Favoriten, Seitennavigation, alle sechs Rechner, Einheitendatenbank und Wissensdatenbank bleiben unverändert.
+- Der vorhandene mobile Schalter für Suche und Filter bleibt erhalten.
+- Das verworfene VDE-0100-600-Funktionsmodul ist nicht Bestandteil dieser Anwendung.
+
+Bedienung auf der mobilen Startseite
+- Kategoriezeile antippen, um die zugehörigen Karten ein- oder auszuklappen.
+- Unter „Kartenansicht“ die Option „Kompakte Karten“ ein- oder ausschalten.
+- Die Einstellungen werden ausschließlich lokal in localStorage gespeichert.
 
 Deployment
 - Den vollständigen Inhalt dieses Ordners unverändert auf einen HTTPS-Webserver kopieren.
@@ -11,8 +31,9 @@ Deployment
 
 PWA
 - Installation über die Installationsfunktion des verwendeten Browsers.
-- Start-URL und App-ID sind versionsunabhängig auf ./ gesetzt.
-- Der Service Worker verwendet die Release-Caches core-v2.2.0.0 und documents-v2.2.0.0.
+- Start-URL, Scope und App-ID sind versionsunabhängig auf ./ gesetzt.
+- Der Service Worker verwendet die Release-Caches core-v2.3.0.0 und documents-v2.3.0.0.
+- Laufzeitkanal: stable.
 
 Integrität
 - Interne Dateien: SHA256SUMS.txt mit einem SHA-256-Eintrag je weiterer Datei.
