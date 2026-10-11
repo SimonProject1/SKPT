@@ -1,15 +1,14 @@
 [
   {
-    "type": "Wissensbeitrag",
+    "type": "Datenbank",
     "category": "WISSEN",
     "manufacturer": "Herstellerunabhängig",
-    "device": "Werkstoff-Nachschlagewerk",
+    "device": "Werkstoffdatenbank",
     "topic": "Werkstoffnummern und Bezeichnungen",
-    "title": "Werkstoff-Nachschlagewerk",
-    "description": "Werkstoffnummern, alternative Bezeichnungen, Werkstoffgruppen und Direktvergleiche nachschlagen.",
+    "title": "Werkstoffdatenbank",
+    "description": "Werkstoffnummern, alternative Bezeichnungen, Werkstoffgruppen und Direktvergleiche zentral nachschlagen.",
     "breadcrumb": [
-      "Wissensdatenbank",
-      "Werkstoffe"
+      "Werkstoffdatenbank"
     ],
     "keywords": [
       "Werkstoff",
@@ -20,9 +19,10 @@
       "Edelstahl",
       "Stahlguss",
       "Nickellegierung",
-      "Werkstoffvergleich"
+      "Werkstoffvergleich",
+      "Werkstoff-Nachschlagewerk"
     ],
-    "url": "wissensdatenbank/werkstoff-nachschlagewerk/",
+    "url": "werkstoffdatenbank/",
     "passthroughQuery": true,
     "catalog": "materials"
   },
@@ -54,15 +54,60 @@
   {
     "type": "Wissensbeitrag",
     "category": "WISSEN",
+    "manufacturer": "Endress+Hauser",
+    "device": "Promass",
+    "topic": "Einbaulage und Einbausituation",
+    "title": "Endress+Hauser Promass Einbaulage",
+    "description": "Einbauempfehlungen für Coriolis-Massedurchfluss: Steigleitung, Druckseite, vollständige Füllung, Sensorlage, Ventile und Rohrerweiterungen.",
+    "breadcrumb": [
+      "Wissensdatenbank",
+      "Endress+Hauser",
+      "Promass",
+      "Einbaulage und Einbausituation"
+    ],
+    "keywords": [
+      "Endress+Hauser",
+      "Endress Hauser",
+      "E+H",
+      "Promass",
+      "Coriolis",
+      "Massedurchfluss",
+      "Massendurchfluss",
+      "Einbaulage",
+      "Einbausituation",
+      "Steigleitung",
+      "Druckseite",
+      "Pumpe",
+      "stabiler Druck",
+      "Fallleitung",
+      "freier Auslauf",
+      "höchster Anlagenpunkt",
+      "Saugseite",
+      "Zwei-Rohr-Sensor",
+      "Gasblasen",
+      "Feststoffe",
+      "Messumformer",
+      "Ventil",
+      "Rohrerweiterung",
+      "Kavitation",
+      "Gerätefamilie",
+      "Promass Gerätefamilie"
+    ],
+    "url": "wissensdatenbank/endress-hauser-promass-einbaulage/"
+  },
+  {
+    "type": "Wissensbeitrag",
+    "category": "WISSEN",
     "manufacturer": "Siemens",
     "device": "Sitrans P320",
-    "topic": "SIL-Verriegelung",
-    "title": "Siemens Sitrans P320",
+    "topic": "SIL Verriegelung",
+    "title": "Siemens Sitrans P320 – SIL Verriegelung",
     "description": "SIL-Funktion mit SIMATIC PDM aktivieren; Schreibschutz und Initial-PIN beachten.",
     "breadcrumb": [
       "Wissensdatenbank",
       "Siemens",
-      "Sitrans P320"
+      "Sitrans P320",
+      "SIL Verriegelung"
     ],
     "keywords": [
       "Siemens",
@@ -73,7 +118,8 @@
       "SIMATIC PDM",
       "Schreibschutz",
       "2457",
-      "PIN"
+      "PIN",
+      "SIL-Verriegelung"
     ],
     "url": "wissensdatenbank/siemens-sitrans-p320-sil-verriegelung/"
   },
@@ -103,18 +149,16 @@
     "url": "wissensdatenbank/vacon-frequenzumrichter-ist-sollwert-abweichung/"
   },
   {
-    "type": "Wissensbeitrag",
-    "category": "WISSEN",
+    "type": "Rechner",
+    "category": "RECHNER",
     "manufacturer": "Siemens",
     "device": "SPS",
-    "topic": "Rohwert",
-    "title": "Siemens SPS Rohwert",
-    "description": "Bestätigte Karten- und Parametrierungsgrenzen; direkter Einstieg in den Siemens-Rohwert-Rechner.",
+    "topic": "Analogwert und Rohwert",
+    "title": "Siemens Rohwert-Rechner",
+    "description": "Siemens-Analogsignale und Rohwerte umrechnen; Kartenprofile und Diagnosebereiche berücksichtigen.",
     "breadcrumb": [
-      "Wissensdatenbank",
-      "Siemens",
-      "SPS",
-      "Rohwert"
+      "Rechner",
+      "Siemens Rohwert-Rechner"
     ],
     "keywords": [
       "Siemens",
@@ -139,14 +183,14 @@
     "category": "WISSEN",
     "manufacturer": "Siemens",
     "device": "SPS",
-    "topic": "Rohwert Grundlagen",
-    "title": "Siemens SPS Rohwert Grundlagen",
+    "topic": "Rohwert",
+    "title": "Siemens SPS – Rohwert",
     "description": "Grundlagen zu Rohwerten, A/D-Wandler, Skalierungsmodellen und Diagnosebereichen mit Link zum Rechner.",
     "breadcrumb": [
       "Wissensdatenbank",
       "Siemens",
       "SPS",
-      "Rohwert Grundlagen"
+      "Rohwert"
     ],
     "keywords": [
       "Siemens",
