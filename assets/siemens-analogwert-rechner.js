@@ -13,12 +13,12 @@ const TYPES=Object.freeze({
  '2-10V':Object.freeze({min:2,max:10,unit:'V',label:'2–10 V'})
 });
 const STATES=Object.freeze({
- underflow:Object.freeze({label:'Unterlauf',color:'#ff7b83'}),
+ underflow:Object.freeze({label:'Unterlauf',color:'#ff5a50'}),
  underrange:Object.freeze({label:'Untersteuerung',color:'#f5b942'}),
- nominal:Object.freeze({label:'Nennbereich',color:'#89d329'}),
+ nominal:Object.freeze({label:'Nennbereich',color:'#7af5d0'}),
  overrange:Object.freeze({label:'Übersteuerung',color:'#f5b942'}),
- overflow:Object.freeze({label:'Überlauf',color:'#ff7b83'}),
- scaleOnly:Object.freeze({label:'Nur Skalierung',color:'#00b7e8'})
+ overflow:Object.freeze({label:'Überlauf',color:'#ff5a50'}),
+ scaleOnly:Object.freeze({label:'Nur Skalierung',color:'#ff6735'})
 });
 const DEFAULT_PHYSICAL_RANGE=Object.freeze({min:-50,max:150,unit:'°C'});
 const profile=value=>typeof value==='object'&&value?value:(PROFILES[value]||PROFILES.et200sp_st);
@@ -162,3 +162,6 @@ elements.profile.addEventListener('change',()=>{try{syncSupportedTypes();const p
 [elements.physicalMin,elements.physicalMax,elements.physicalUnit].forEach(element=>{element.addEventListener('input',resyncAndRender);element.addEventListener('change',resyncAndRender);element.addEventListener('focus',event=>event.currentTarget.select())});
 bindSignButtons();syncSupportedTypes();setMode('signal');
 })();
+
+/* Physikalische Einheiten im Siemens-Rohwert-Rechner · 2.4.2.1 */
+(()=>{'use strict';const $=id=>document.getElementById(id);function options(){return SK_UNITS.model.categories.map(category=>`<option value="${category.id}">${SK_UNITS.escape(category.name)}</option>`).join('')}function syncHidden(){const unit=SK_UNITS.unit($('physicalCategory').value,$('physicalUnitSelect').value);$('physicalUnit').value=unit.symbol;$('physicalUnit').dispatchEvent(new Event('input',{bubbles:true}));$('physicalUnit').dispatchEvent(new Event('change',{bubbles:true}))}function convertRange(category,oldUnit,newUnit){['physicalMin','physicalMax'].forEach(id=>{const input=$(id),value=window.num(input.value);if(Number.isFinite(value))input.value=SK_UNITS.inputValue(SK_UNITS.convert(value,category,oldUnit,newUnit))})}async function init(){await SK_UNITS.ready;$('physicalCategory').innerHTML=options();$('physicalCategory').value='temperature';SK_UNITS.populateSelect($('physicalUnitSelect'),'temperature','celsius',{includeAll:true});$('physicalCategory').addEventListener('change',()=>{const category=SK_UNITS.category($('physicalCategory').value);SK_UNITS.populateSelect($('physicalUnitSelect'),category.id,category.defaultUnit,{includeAll:true});syncHidden()});$('physicalUnitSelect').addEventListener('sk:unit-change',event=>{convertRange(event.detail.categoryId,event.detail.oldUnit,event.detail.newUnit);syncHidden()});syncHidden()}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init()})();

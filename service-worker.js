@@ -1,5 +1,5 @@
-const RELEASE='2.4.0.0';
-const CACHE_PREFIX='sk-plt-tools-';
+const RELEASE='2.4.2.1';
+const CACHE_PREFIX='sk-pct-tools-';
 const CORE_CACHE=`${CACHE_PREFIX}core-v${RELEASE}`;
 const DOCUMENT_CACHE=`${CACHE_PREFIX}documents-v${RELEASE}`;
 const CORE=[
@@ -7,6 +7,9 @@ const CORE=[
   './analogsignal/',
   './assets/analogsignal-rechner.js',
   './assets/app.js',
+  './assets/pct-controls.css',
+  './assets/pct-controls.js',
+  './assets/pct-controls.svg',
   './assets/apple-touch-icon.png',
   './assets/core.css',
   './assets/einheitenrechner.js',
@@ -16,8 +19,8 @@ const CORE=[
   './assets/icon-maskable-192.png',
   './assets/icon-maskable-512.png',
   './assets/knowledge-article.css',
-  './assets/logo-layout.css',
-  './assets/logo.png',
+  './assets/knowledge-cartoon.css',
+  './assets/logo.webp',
   './assets/materials.css',
   './assets/materials.js',
   './assets/materials.json',
@@ -29,7 +32,6 @@ const CORE=[
   './assets/search-index.json',
   './assets/siemens-analogwert-rechner.css',
   './assets/siemens-analogwert-rechner.js',
-  './assets/siemens-unit-integration.js',
   './assets/unit-database-page.js',
   './assets/unit-database.css',
   './assets/unit-system.js',
@@ -86,7 +88,7 @@ self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const keep=new Set([CORE_CACHE,DOCUMENT_CACHE]);
     const keys=await caches.keys();
-    await Promise.all(keys.filter(key=>key.startsWith(CACHE_PREFIX)&&!keep.has(key)).map(key=>caches.delete(key)));
+    await Promise.all(keys.filter(key=>key.startsWith('sk-')&&key.includes('-tools-')&&!keep.has(key)).map(key=>caches.delete(key)));
     await self.clients.claim();
   })());
 });
