@@ -1,2 +1,33 @@
-/* Analogsignal-Rechner mit zentralen Einheiten · 2.4.2.1 */
-(()=>{'use strict';const $=id=>document.getElementById(id);const values=ids=>ids.map(id=>window.num($(id).value));function convertInputs(ids,category,oldUnit,newUnit){ids.forEach(id=>{const field=$(id),value=window.num(field.value);if(Number.isFinite(value))field.value=SK_UNITS.inputValue(SK_UNITS.convert(value,category,oldUnit,newUnit))})}function symbol(category,unit){return SK_UNITS.unit(category,unit).symbol}function calculate(){const[a,b,c,d,v]=values(['p0','p1','s0','s1','x']);let q;if([a,b,c,d,v].some(Number.isNaN)||a===b||c===d){$('out').textContent='Ungültige Eingabe';return}if($('dir').value==='ps'){q=c+(v-a)/(b-a)*(d-c);$('out').textContent=`${window.de(q)} ${symbol('current',$('signalUnit').value)}`;$('pct').textContent=`${window.de((v-a)/(b-a)*100,1)} %`}else{q=a+(v-c)/(d-c)*(b-a);$('out').textContent=`${window.de(q)} ${symbol($('processCategory').value,$('processUnit').value)}`;$('pct').textContent=`${window.de((v-c)/(d-c)*100,1)} %`}}function configureProcess(categoryId,selected){const category=SK_UNITS.category(categoryId);SK_UNITS.populateSelect($('processUnit'),categoryId,selected||category.defaultUnit,{includeAll:true});$('processUnitLabel').textContent=`Prozesseinheit (${category.name})`}async function init(){await SK_UNITS.ready;$('processCategory').innerHTML=SK_UNITS.model.categories.map(category=>`<option value="${category.id}">${SK_UNITS.escape(category.name)}</option>`).join('');$('processCategory').value='pressure';configureProcess('pressure','bar');SK_UNITS.populateSelect($('signalUnit'),'current','milliampere',{includeAll:true});$('processCategory').addEventListener('change',()=>{configureProcess($('processCategory').value);calculate()});$('processUnit').addEventListener('sk:unit-change',event=>{const ids=['p0','p1'];if($('dir').value==='ps')ids.push('x');convertInputs(ids,event.detail.categoryId,event.detail.oldUnit,event.detail.newUnit);calculate()});$('signalUnit').addEventListener('sk:unit-change',event=>{const ids=['s0','s1'];if($('dir').value==='sp')ids.push('x');convertInputs(ids,'current',event.detail.oldUnit,event.detail.newUnit);calculate()});document.querySelectorAll('#p0,#p1,#s0,#s1,#dir,#x').forEach(element=>element.addEventListener('input',calculate));$('dir').addEventListener('change',calculate);calculate()}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init()})();
+/* Analogsignal-Rechner · einheitenlose TÜV-Skalierung · 3.0.0.1 */
+(()=>{'use strict';
+const SIGNALS=Object.freeze({
+  '4-20mA':Object.freeze({min:4,max:20,unit:'mA',label:'4–20 mA'}),
+  '0-20mA':Object.freeze({min:0,max:20,unit:'mA',label:'0–20 mA'}),
+  '0-10V':Object.freeze({min:0,max:10,unit:'V',label:'0–10 V'}),
+  '2-10V':Object.freeze({min:2,max:10,unit:'V',label:'2–10 V'})
+});
+const $=id=>document.getElementById(id);
+const signal=()=>SIGNALS[$('signalType').value]||SIGNALS['4-20mA'];
+const fields=()=>[$('p0'),$('p1'),$('x')];
+const labels=new Map([['p0','Messbereichsanfang MA'],['p1','Messbereichsende ME'],['x','Eingabewert']]);
+function clearResult(){$('out').textContent='–';$('pct').textContent='–'}
+function validate(strict=false){
+ const issues=[];let pending=false;
+ fields().forEach(input=>{const result=SK_NUMERIC.analyze(input.value);if(result.state==='intermediate'){pending=true;if(strict)issues.push({input,message:`${labels.get(input.id)}: Zahl bitte vollständig eingeben.`})}else if(result.state==='invalid')issues.push({input,message:`${labels.get(input.id)}: ${result.reason}`})});
+ if(pending&&!strict&&!issues.length){SK_NUMERIC.clear(fields(),$('analogError'));clearResult();return null}
+ if(SK_NUMERIC.report(fields(),$('analogError'),issues)){clearResult();return null}
+ return fields().map(input=>SK_NUMERIC.parse(input.value));
+}
+function syncLabels(){const processToSignal=$('dir').value==='ps',type=signal();$('inputLabel').textContent=processToSignal?'Skalierungswert (einheitenlos)':`Signalwert (${type.unit})`;$('outputLabel').textContent=processToSignal?`Signalwert (${type.label})`:'Skalierungswert (einheitenlos)';$('x').setAttribute('aria-label',$('inputLabel').textContent)}
+function calculate(strict=false){
+ syncLabels();const values=validate(strict);if(!values)return false;
+ const [ma,me,value]=values,type=signal(),signalMin=type.min,signalMax=type.max;
+ if(ma===me){SK_NUMERIC.report(fields(),$('analogError'),[{input:$('p0'),message:'Messbereich: MA und ME müssen unterschiedlich sein.'},{input:$('p1'),message:'Messbereich: MA und ME müssen unterschiedlich sein.'}]);clearResult();return false}
+ SK_NUMERIC.clear(fields(),$('analogError'));let result,percent;
+ if($('dir').value==='ps'){percent=(value-ma)/(me-ma)*100;result=signalMin+(value-ma)/(me-ma)*(signalMax-signalMin);$('out').textContent=`${window.de(result)} ${type.unit}`}
+ else{percent=(value-signalMin)/(signalMax-signalMin)*100;result=ma+(value-signalMin)/(signalMax-signalMin)*(me-ma);$('out').textContent=window.de(result)}
+ $('pct').textContent=`${window.de(percent,1)} %`;return true;
+}
+function init(){const form=$('analogForm');if(!form)return;form.addEventListener('submit',event=>{event.preventDefault();calculate(true)});for(const id of ['p0','p1','x']){$(id).addEventListener('input',()=>calculate(false));$(id).addEventListener('change',()=>calculate(true))}for(const id of ['signalType','dir'])$(id).addEventListener('change',()=>calculate(true));calculate(true)}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init();
+})();
