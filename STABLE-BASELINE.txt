@@ -1,6 +1,0 @@
-SK PLT Tools – Versionsabgrenzung
-
-Offizielle Release-Version: V2.1.0.0
-Freigabestatus: stabil
-
-V2.1.0.0 ist das vollständige, geprüfte und auslieferbare Referenzpaket. Die Projektstruktur, alle Module, Direktlinks, PWA-/Offline-Funktionen, Dokumentations- und Prüfdateien sind Bestandteil dieser stabilen Basis.
